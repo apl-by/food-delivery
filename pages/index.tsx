@@ -1,6 +1,7 @@
+import Header from "../components/header/header";
 import Head from "next/head";
 import { ReactElement } from "react";
-import MainLayout from "../components/main-layout/main-layout";
+import Layout from "../components/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 // import Image from "next/image";
 // import { Inter } from "@next/font/google";
@@ -17,13 +18,14 @@ const Home: NextPageWithLayout = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <>xcvxcv</>
+      <Header />
+      <main>{"ffffffffff"}</main>
     </>
   );
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <MainLayout>{page}</MainLayout>;
+  return <Layout>{page}</Layout>;
 };
 
 export default Home;
