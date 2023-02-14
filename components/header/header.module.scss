@@ -1,6 +1,73 @@
 .header {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   min-height: 80px;
   padding: 0 var(--side-padding);
+  border-bottom: 1px solid var(--color-filled-default);
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.cart {
+  @mixin centering {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @include centering;
+  flex-shrink: 0;
+  position: relative;
+  background-color: var(--color-primary-light);
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+
+  &::after {
+    content: attr(data-count);
+    @include centering;
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    background-color: var(--color-primary-default);
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--text-color-white);
+  }
+}
+
+.avatar {
+  @mixin common {
+    display: flex;
+    flex-shrink: 0;
+    border-radius: 16px;
+    width: 50px;
+    height: 50px;
+  }
+
+  @include common;
+  position: relative;
+  border: 2px solid var(--color-filled-default);
+  overflow: hidden;
+  margin-left: 17px;
+
+  &::after {
+    content: "";
+    @include common;
+    position: absolute;
+    border: 3.5px solid white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.mix-form {
+  margin-left: 48px;
 }

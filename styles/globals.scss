@@ -1,5 +1,18 @@
 :root {
   --side-padding: 165px;
+  --text-color-white: #ffffff;
+  --text-color-primary-default: #2b2b43;
+  --text-color-primary-light: #545563;
+  --text-color-seondary-default: #83859c;
+  --text-color-seondary-light: #c7c8d2;
+  --bg-color-primary: #e5e5e5;
+  --bg-color-seondary: #697bff;
+  --color-primary-default: #4e60ff;
+  --color-primary-light: #f3f4ff;
+  --color-secondary-default: #fd6d22;
+  --color-secondary-light: #fff3ed;
+  --color-error-default: #ff5c60;
+  --color-filled-default: #edeef2;
 }
 
 // @media screen and (max-width: 1100) {
@@ -18,10 +31,11 @@
 }
 
 body {
-  background: #e5e5e5;
+  background: var(--bg-color-primary);
   max-width: 100vw;
   width: 100%;
   overflow-x: hidden;
+  color: var(--text-color-primary-default);
 }
 
 body > #__next {

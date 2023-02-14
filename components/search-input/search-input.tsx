@@ -1,6 +1,6 @@
 import { useId } from "react";
 import styles from "./search-input.module.scss";
-import SearchIcon from "../../public/search.svg";
+import SearchIcon from "../../public/search-icon.svg";
 
 type SearchInputProps = {
   type: string;
