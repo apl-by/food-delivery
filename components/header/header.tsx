@@ -6,6 +6,7 @@ import { useState } from "react";
 import NavBar from "../nav-bar/nav-bar";
 import Image from "next/image";
 import CartIcon from "../../public/cart-icon.svg";
+import Link from "next/link";
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -18,7 +19,9 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.wrapper}>
-        <Logo />
+        <Link href={"/"}>
+          <Logo />
+        </Link>
         <Form noValidate onSubmit={handleSubmit} mix={styles["mix-form"]}>
           <SearchInput
             type="text"
@@ -31,10 +34,10 @@ const Header = () => {
       </div>
       <div className={styles.wrapper}>
         <NavBar />
-        <div className={styles.cart} data-count={0}>
+        <Link className={styles.cart} data-count={0} href={"/cart"}>
           <CartIcon />
-        </div>
-        <div className={styles.avatar}>
+        </Link>
+        <Link className={styles.avatar} href={"/account"}>
           {
             <Image
               src={"/avatar.png"}
@@ -45,7 +48,7 @@ const Header = () => {
               className={styles.img}
             ></Image>
           }
-        </div>
+        </Link>
       </div>
     </header>
   );
