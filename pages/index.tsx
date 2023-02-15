@@ -3,11 +3,8 @@ import Head from "next/head";
 import { ReactElement } from "react";
 import Layout from "../components/layout/layout";
 import type { NextPageWithLayout } from "./_app";
-// import Image from "next/image";
-// import { Inter } from "@next/font/google";
-// import styles from "@/styles/Home.module.css";
-
-// const inter = Inter({ subsets: ["latin"] });
+import Promo from "../components/promo/promo";
+import styles from "../styles/home.module.scss";
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -19,7 +16,26 @@ const Home: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main>{"ffffffffff"}</main>
+      <main className={styles.main}>
+        <section className={styles.promo}>
+          <Promo
+            img={"/promo-deserts.png"}
+            alt={"Desserts"}
+            mod={"primary"}
+            title={"All deserts"}
+            info={"20% OFF"}
+            category={"Desserts"}
+          />
+          <Promo
+            img={"/promo-burgers.png"}
+            alt={"Burgers"}
+            mod={"secondary"}
+            title={"Big Burgers"}
+            info={"50% OFF"}
+            category={"Fooddies"}
+          />
+        </section>
+      </main>
     </>
   );
 };
