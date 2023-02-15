@@ -5,6 +5,8 @@ import Layout from "../components/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 import Promo from "../components/promo/promo";
 import styles from "../styles/home.module.scss";
+import FoodCategory from "../components/food-category/food-category";
+import { categories } from "../data/data";
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -34,6 +36,11 @@ const Home: NextPageWithLayout = () => {
             info={"50% OFF"}
             category={"Fooddies"}
           />
+        </section>
+        <section className={styles.categories}>
+          {categories.map((i) => (
+            <FoodCategory key={i.id} icon={i.icon} title={i.title} />
+          ))}
         </section>
       </main>
     </>
