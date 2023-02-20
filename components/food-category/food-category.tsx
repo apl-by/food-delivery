@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./food-category.module.scss";
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { memo } from "react";
 import { FoodCategoryTitle } from "../../data/data";
 
 let cx = classNames.bind(styles);
@@ -9,13 +9,13 @@ let cx = classNames.bind(styles);
 type FoodCategoryProps = {
   icon: string;
   title: FoodCategoryTitle;
+  checked: boolean;
+  onClick: (value: string) => void;
 };
 
-const FoodCategory = ({ icon, title }: FoodCategoryProps) => {
-  const [checked, setChecked] = useState(false);
-
+const FoodCategory = ({ icon, title, checked, onClick }: FoodCategoryProps) => {
   const handleClick = (e: React.SyntheticEvent) => {
-    setChecked(!checked);
+    onClick(title);
   };
 
   const cnCategory = cx("category", { [`category-checked`]: checked });
@@ -35,4 +35,4 @@ const FoodCategory = ({ icon, title }: FoodCategoryProps) => {
   );
 };
 
-export default FoodCategory;
+export default memo(FoodCategory);

@@ -1,0 +1,22 @@
+.category {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 10px;
+  max-width: min-content;
+  min-height: 24px;
+  border-radius: 20px;
+  background-color: var(--color-filled-default);
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  color: var(--text-color-primary-light);
+}

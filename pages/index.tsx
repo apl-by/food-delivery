@@ -1,14 +1,135 @@
 import Header from "../components/header/header";
 import Head from "next/head";
-import { ReactElement } from "react";
+import {
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Layout from "../components/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 import Promo from "../components/promo/promo";
 import styles from "../styles/home.module.scss";
 import FoodCategory from "../components/food-category/food-category";
 import { categories } from "../data/data";
+import useSWR from "swr";
+import { RestaurantRes } from "./api";
+import { useRouter } from "next/router";
+import RestaurantCard from "@/components/restaurant-card/restaurant-card";
+import { OrderContext } from "@/contexts/orderContext";
+import { getQueryParams } from "@/utils/utils";
+import classNames from "classnames/bind";
+
+let cx = classNames.bind(styles);
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const queryName = "filter";
+export interface DataToDisplay extends RestaurantRes {
+  ordersCount: number;
+}
 
 const Home: NextPageWithLayout = () => {
+  const q = useRouter();
+  const { pathname, asPath, push, isReady } = useRouter();
+  const { orders } = useContext(OrderContext);
+  const [dataToDisplay, setDataToDIsplay] = useState<DataToDisplay[]>([]);
+  const [filterValues, setFilterValues] = useState<string[]>(
+    () =>
+      (getQueryParams(asPath, queryName, {
+        getAllMatches: true,
+      }) as string[] | null) ?? []
+  );
+  console.log(q);
+
+  const { data, error, isLoading } = useSWR<RestaurantRes[]>(
+    "/api" + asPath,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (!data) return;
+
+    const handledData: DataToDisplay[] = data.map((i) => {
+      const newData = JSON.parse(JSON.stringify(i));
+      newData.ordersCount = 0;
+      orders.forEach((order) =>
+        order.restaurant === i.title
+          ? (newData.ordersCount += order.count)
+          : void 0
+      );
+      return newData;
+    });
+
+    setDataToDIsplay(handledData);
+  }, [data, orders]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(asPath.replace(/\/\??/, ""));
+    searchParams.delete(queryName);
+    filterValues.forEach((i) => searchParams.append(queryName, i));
+    push(pathname + "?" + searchParams.toString(), undefined, {
+      scroll: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterValues]);
+
+  // устанавливает значение фильтра из query параметров при ручной навигации
+  // по истории в браузере:
+  useEffect(() => {
+    const queryValue = getQueryParams(asPath, queryName, {
+      getAllMatches: true,
+    }) as string[] | null;
+    if (queryValue === null) {
+      filterValues.length === 0 ? void 0 : setFilterValues([]);
+      return;
+    }
+    if (queryValue.length !== filterValues.length) {
+      return setFilterValues(queryValue);
+    }
+    const isEqual = queryValue.every((i) => filterValues.includes(i));
+    if (!isEqual) return setFilterValues(queryValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, asPath]);
+
+  const handleFilter = useCallback((value: string) => {
+    setFilterValues((prev) => {
+      const clone = [...prev];
+      const targetInd = clone.indexOf(value);
+      if (targetInd >= 0) {
+        clone.splice(targetInd, 1);
+        return clone;
+      }
+      clone.push(value);
+      return clone;
+    });
+  }, []);
+
+  const JsxDataList = useMemo(() => {
+    if (data?.length === 0) {
+      return <p>{"Sorry, nothing was found for your query"}</p>;
+    }
+    if (data || isLoading) {
+      const cnRestaurantsWrapper = cx("restaurants-wrapper", {
+        ["restaurants-wrapper-loading"]: isLoading,
+      });
+      return dataToDisplay.length === 0 ? (
+        "Loading..."
+      ) : (
+        <div className={cnRestaurantsWrapper}>
+          {dataToDisplay.map((i) => (
+            <RestaurantCard key={i.id} data={i} />
+          ))}
+        </div>
+      );
+    }
+    if (error) {
+      return <p>{"Sorry, an error has occurred. Try again later"}</p>;
+    }
+  }, [data, dataToDisplay, error, isLoading]);
+
   return (
     <>
       <Head>
@@ -39,8 +160,21 @@ const Home: NextPageWithLayout = () => {
         </section>
         <section className={styles.categories}>
           {categories.map((i) => (
-            <FoodCategory key={i.id} icon={i.icon} title={i.title} />
+            <FoodCategory
+              key={i.id}
+              icon={i.icon}
+              title={i.title}
+              checked={isReady ? filterValues.includes(i.title) : false}
+              onClick={handleFilter}
+            />
           ))}
+        </section>
+
+        <section className={styles.restaurants}>
+          <h2 className={styles["restaurants-subtitle"]}>
+            {"Nearby restaurants"}
+          </h2>
+          {JsxDataList}
         </section>
       </main>
     </>

@@ -20,7 +20,14 @@ const Promo = ({ img, alt, mod, title, info, category }: PromoProps) => {
   return (
     <div className={cnPromo}>
       <div className={styles["image-wrapper"]}>
-        <Image src={img} alt={alt} fill className={styles.image} />
+        <Image
+          src={img}
+          alt={alt}
+          width={298}
+          height={188}
+          priority={true}
+          className={styles.image}
+        />
       </div>
       <div className={styles["info-wrapper"]}>
         <h2 className={styles.title}>{title}</h2>

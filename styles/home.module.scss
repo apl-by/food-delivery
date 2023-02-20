@@ -1,3 +1,10 @@
+@mixin listDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  column-gap: 30px;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -14,9 +21,27 @@
 }
 
 .categories {
+  @include listDisplay();
+}
+
+.restaurants {
   display: flex;
-  // justify-content: space-between;
-  flex-wrap: wrap;
-  row-gap: 20px;
-  column-gap: 30px;
+  flex-direction: column;
+  margin: 40px 0;
+}
+
+.restaurants-subtitle {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.1px;
+  margin-bottom: 16px;
+}
+
+.restaurants-wrapper {
+  @include listDisplay();
+}
+
+.restaurants-wrapper-loading {
+  filter: blur(3px);
 }

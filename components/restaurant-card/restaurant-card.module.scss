@@ -1,0 +1,87 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px 16px 0 0;
+  width: 350px;
+  min-height: 238px;
+  overflow: hidden;
+  position: relative;
+}
+
+.is-featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 94px;
+  height: 32px;
+  right: 0px;
+  top: 0px;
+  border-radius: 0 16px;
+  background-color: var(--color-primary-default);
+  color: var(--text-color-white);
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.image-wrapper {
+  display: flex;
+  position: relative;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  $border-value: 1px solid var(--color-filled-default);
+
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 0 0 16px 16px;
+  border-right: $border-value;
+  border-left: $border-value;
+  border-bottom: $border-value;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-color-seondary-default);
+  margin: 6px 0 0;
+}
+
+.clock-icon {
+  margin-right: 6px;
+}
+
+.dot {
+  margin: 0 8px;
+  display: flex;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+  background-color: var(--color-primary-default);
+}
+
+.chips-wrapper {
+  display: flex;
+  margin-top: 14px;
+  gap: 8px;
+}
