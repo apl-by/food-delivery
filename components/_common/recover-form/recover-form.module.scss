@@ -1,0 +1,46 @@
+.form {
+  max-width: 350px;
+  width: 100%;
+  max-height: 632px;
+  height: 100%;
+}
+
+.title {
+  margin-bottom: 16px;
+}
+
+.text {
+  color: var(--text-color-primary-light);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.description {
+  margin-bottom: 32px;
+}
+
+.input {
+  margin-bottom: 28px;
+}
+
+.button {
+  width: 100% !important;
+  margin: 20px 0 124px;
+}
+
+.link {
+  align-self: center;
+  text-decoration: none;
+  color: var(--color-primary-default);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px;
+}
+
+.question {
+  align-self: center;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,35 @@
+.label {
+  display: flex;
+  position: relative;
+  max-width: max-content;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  user-select: none;
+
+  &::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-color-seondary-light);
+    border-radius: 4px;
+    margin-right: 12px;
+  }
+
+  &:has(.input:checked)::before {
+    background-image: url("../../../public/icons/check.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--color-primary-default);
+    border: none;
+  }
+}
+
+.input {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  opacity: 0;
+}

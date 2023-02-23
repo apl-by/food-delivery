@@ -1,4 +1,4 @@
-import Header from "../components/header/header";
+import Header from "../components/_common/header/header";
 import Head from "next/head";
 import {
   ReactElement,
@@ -10,14 +10,14 @@ import {
 } from "react";
 import Layout from "../components/layout/layout";
 import type { NextPageWithLayout } from "./_app";
-import Promo from "../components/promo/promo";
+import Promo from "../components/_home-page/promo/promo";
 import styles from "../styles/home.module.scss";
-import FoodCategory from "../components/food-category/food-category";
+import FoodCategory from "../components/_home-page/food-category/food-category";
 import { categories } from "../data/data";
 import useSWR from "swr";
 import { RestaurantRes } from "./api";
 import { useRouter } from "next/router";
-import RestaurantCard from "@/components/restaurant-card/restaurant-card";
+import RestaurantCard from "@/components/_home-page/restaurant-card/restaurant-card";
 import { OrderContext } from "@/contexts/orderContext";
 import { getQueryParams } from "@/utils/utils";
 import classNames from "classnames/bind";
@@ -32,7 +32,6 @@ export interface DataToDisplay extends RestaurantRes {
 }
 
 const Home: NextPageWithLayout = () => {
-  const q = useRouter();
   const { pathname, asPath, push, isReady } = useRouter();
   const { orders } = useContext(OrderContext);
   const [dataToDisplay, setDataToDIsplay] = useState<DataToDisplay[]>([]);
@@ -42,7 +41,6 @@ const Home: NextPageWithLayout = () => {
         getAllMatches: true,
       }) as string[] | null) ?? []
   );
-  console.log(q);
 
   const { data, error, isLoading } = useSWR<RestaurantRes[]>(
     "/api" + asPath,
@@ -68,6 +66,8 @@ const Home: NextPageWithLayout = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(asPath.replace(/\/\??/, ""));
+    if (filterValues.length === 0 && searchParams.toString() === "") return;
+
     searchParams.delete(queryName);
     filterValues.forEach((i) => searchParams.append(queryName, i));
     push(pathname + "?" + searchParams.toString(), undefined, {

@@ -1,0 +1,52 @@
+.button {
+  box-shadow: none;
+  outline: none;
+  background-color: transparent;
+  border: 1px solid var(--color-primary-default);
+  color: var(--color-primary-default);
+  border-radius: 8px;
+  width: max-content;
+  height: 44px;
+  padding: 0 16px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+
+  &-warning {
+    border-color: var(--color-warning-default);
+    color: var(--color-warning-default);
+  }
+
+  &-disabled {
+    border-color: var(--text-color-seondary-default);
+    color: var(--text-color-seondary-default);
+  }
+
+  &-filled {
+    border: none;
+    background-color: var(--color-primary-default);
+    color: var(--text-color-white);
+  }
+
+  &-mod-meal-card {
+    background: #f3f4ff;
+    color: #4e60ff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 17px;
+    cursor: default;
+  }
+
+  &-mod-review-card {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 17px;
+    cursor: default;
+  }
+}
