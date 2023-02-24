@@ -10,6 +10,10 @@ import { useRouter } from "next/router";
 import CartIcon from "../../_home-page/cart-icon/cart-icon";
 import { OrderContext } from "@/contexts/orderContext";
 import { getQueryParams } from "@/utils/utils";
+import { navItems } from "@/data/data";
+import classNames from "classnames/bind";
+
+let cx = classNames.bind(styles);
 
 const queryName = "search";
 
@@ -61,11 +65,20 @@ const Header = () => {
           )}
         </div>
         <div className={styles.wrapper}>
-          <NavBar />
-          <Link className={styles.cart} data-count={totalCount} href={"/cart"}>
+          <NavBar navData={navItems} currentPath={pathname} />
+          <Link
+            className={cx("cart", { ["cart-active"]: pathname === "/cart" })}
+            data-count={totalCount}
+            href={"/cart"}
+          >
             <CartIcon mod={totalCount > 0 ? "active" : undefined} />
           </Link>
-          <Link className={styles.avatar} href={"/account"}>
+          <Link
+            className={cx("avatar", {
+              ["avatar-active"]: pathname.startsWith("/account"),
+            })}
+            href={"/account"}
+          >
             {
               <Image
                 src={"/avatar.png"}

@@ -1,0 +1,24 @@
+.setting-list {
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  margin-bottom: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  row-gap: 12px;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}

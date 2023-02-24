@@ -1,0 +1,12 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: var(--max-width-content);
+  width: 100%;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.settings {
+  max-width: fit-content;
+}

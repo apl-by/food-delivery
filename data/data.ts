@@ -1,3 +1,15 @@
+export type NavItem = {
+  id: number;
+  title: string;
+  link: string;
+};
+
+export const navItems: NavItem[] = [
+  { id: 0, title: "Restaurants", link: "/" },
+  { id: 1, title: "Deals", link: "/deals" },
+  { id: 2, title: "My orders", link: "/orders" },
+];
+
 export type FoodCategoryTitle =
   | "Pizza"
   | "Burger"
@@ -85,5 +97,40 @@ export const restaurants: RestaurantData[] = [
     minSum: "57",
     menu: ["Sushi", "Pizza", "Desserts"],
     featured: false,
+  },
+];
+
+export const settings = [
+  {
+    id: 0,
+    title: "Account",
+    description: "Personal information",
+    iconDefault: "/account/account.svg",
+    iconActive: "/account/account-active.svg",
+    to: "/account",
+  },
+  {
+    id: 1,
+    title: "Address",
+    description: "Shippings addresses",
+    iconDefault: "/account/address.svg",
+    iconActive: "/account/address-active.svg",
+    to: "/account/address",
+  },
+  {
+    id: 2,
+    title: "Payment method",
+    description: "Connected credit cards",
+    iconDefault: "/account/payment.svg",
+    iconActive: "/account/payment-active.svg",
+    to: "/account/payment",
+  },
+  {
+    id: 3,
+    title: "Security",
+    description: "Password, 2FA",
+    iconDefault: "/account/security.svg",
+    iconActive: "/account/security-active.svg",
+    to: "/account/security",
   },
 ];

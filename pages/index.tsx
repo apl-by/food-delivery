@@ -1,4 +1,3 @@
-import Header from "../components/_common/header/header";
 import Head from "next/head";
 import {
   ReactElement,
@@ -138,7 +137,6 @@ const Home: NextPageWithLayout = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
       <main className={styles.main}>
         <section className={styles.promo}>
           <Promo

@@ -43,14 +43,18 @@ const fakeOrder: OrderType = {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout || ((page) => page);
 
-  return getLayout(
+  return (
     <OrderContext.Provider value={fakeOrder}>
-      <style jsx global>{`
-        html {
-          font-family: ${nunito.style.fontFamily};
-        }
-      `}</style>
-      <Component {...pageProps} />
+      {getLayout(
+        <>
+          <style jsx global>{`
+            html {
+              font-family: ${nunito.style.fontFamily};
+            }
+          `}</style>
+          <Component {...pageProps} />
+        </>
+      )}
     </OrderContext.Provider>
   );
 }

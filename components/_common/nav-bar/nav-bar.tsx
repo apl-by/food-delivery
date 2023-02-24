@@ -1,19 +1,27 @@
+import { NavItem } from "@/data/data";
 import Link from "next/link";
 import styles from "./nav-bar.module.scss";
+import classNames from "classnames/bind";
 
-const navItems = [
-  { id: 0, title: "Restaurants", link: "/restaurants" },
-  { id: 1, title: "Deals", link: "/deals" },
-  { id: 2, title: "My orders", link: "/orders" },
-];
+let cx = classNames.bind(styles);
 
-const NavBar = ({}) => {
+type NavBarProps = {
+  currentPath: string;
+  navData: NavItem[];
+};
+
+const NavBar = ({ currentPath, navData }: NavBarProps) => {
   return (
     <nav className={styles.nav}>
       <ul className={styles.list}>
-        {navItems.map((i) => (
+        {navData.map((i) => (
           <li className={styles.item} key={i.id}>
-            <Link className={styles.link} href={i.link}>
+            <Link
+              className={cx("link", {
+                ["link-active"]: currentPath === i.link,
+              })}
+              href={i.link}
+            >
               {i.title}
             </Link>
           </li>
