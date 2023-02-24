@@ -1,9 +1,33 @@
 .wrapper {
+  display: flex;
+  flex-direction: column;
   padding-top: 20px;
   margin-right: 19.5%;
   margin-left: auto;
 }
 
+.logo {
+  align-self: flex-start;
+}
+
 .register-form {
   margin-top: 128px;
+}
+
+@media screen and (max-height: 830px) {
+  .register-form {
+    margin-top: 80px;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .register-form {
+    margin-top: 50px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .wrapper {
+    margin: 0 auto;
+  }
 }

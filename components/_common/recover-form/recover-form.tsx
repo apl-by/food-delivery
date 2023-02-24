@@ -28,7 +28,7 @@ const RecoverForm = ({ mix }: RecoverFormProps) => {
   const cnQuestion = cx("question", "text");
   return (
     <Form className={cnForm}>
-      <h1 className={styles.title}>Recover access</h1>
+      <h1 className={styles.title}>Recover</h1>
       <p className={cnDescription}>
         {
           "Enter the email address you used when registering to recover access to your account"

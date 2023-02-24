@@ -13,9 +13,13 @@
 .image-wrapper {
   display: flex;
   position: relative;
-  object-fit: cover;
   overflow: hidden;
   border-radius: 10px;
+}
+
+.image {
+  object-fit: cover;
+  background-position: center;
 }
 
 .content-wrapper {

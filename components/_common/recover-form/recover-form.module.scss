@@ -6,6 +6,10 @@
 
 .title {
   margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 82px;
+  letter-spacing: 0.1px;
 }
 
 .text {
@@ -42,4 +46,10 @@
 .question {
   align-self: center;
   margin-bottom: 10px;
+}
+@media screen and (max-width: 560px) {
+  .form {
+    max-width: 330px;
+    padding: 5px 5px 20px;
+  }
 }

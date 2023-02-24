@@ -27,7 +27,7 @@ const LoginForm = ({ mix }: LoginFormProps) => {
     setInputValues((prev) => ({ ...prev, [name]: inputValue }));
   };
 
-  const cnLoginForm = cx("login-form", mix);
+  const cnLoginForm = cx("form", mix);
   const cnDescription = cx("description", "text");
   const cnInput = cx("input");
   const cnRecovering = cx("recovering", "link");

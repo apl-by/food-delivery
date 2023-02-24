@@ -16,7 +16,7 @@ const Login = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.wrapper}>
-        <Link href={"/"}>
+        <Link href={"/"} className={styles.logo}>
           <Logo />
         </Link>
         <LoginForm mix={styles["login-form"]} />
