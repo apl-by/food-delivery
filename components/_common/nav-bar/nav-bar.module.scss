@@ -5,11 +5,19 @@
 .list {
   display: flex;
   list-style: none;
+
+  &-column {
+    flex-direction: column;
+  }
 }
 
 .item {
   display: flex;
   margin-right: 10px;
+
+  &-column {
+    margin: 0 0 10px;
+  }
 }
 
 .link {

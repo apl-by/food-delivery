@@ -13,7 +13,9 @@ let cx = classNames.bind(styles);
 // const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const Account: NextPageWithLayout = () => {
-  // const { pathname, asPath, push, isReady } = useRouter();
+  const { pathname, asPath, push, isReady } = useRouter();
+
+  console.log(asPath, pathname);
 
   // const { data, error, isLoading } = useSWR<RestaurantRes[]>(
   //   "/api" + asPath,

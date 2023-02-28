@@ -12,43 +12,48 @@ import type { NextPageWithLayout } from "./_app";
 import Promo from "../components/_home-page/promo/promo";
 import styles from "../styles/home.module.scss";
 import FoodCategory from "../components/_home-page/food-category/food-category";
-import { categories } from "../data/data";
-import useSWR from "swr";
-import { RestaurantRes } from "./api";
+import { categories, restaurants } from "../data/data";
 import { useRouter } from "next/router";
 import RestaurantCard from "@/components/_home-page/restaurant-card/restaurant-card";
 import { OrderContext } from "@/contexts/orderContext";
-import { getQueryParams } from "@/utils/utils";
+import { getData, RestaurantRes } from "@/utils/utils";
+import { GetServerSideProps } from "next";
 import classNames from "classnames/bind";
 
 let cx = classNames.bind(styles);
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const queryName = "filter";
 export interface DataToDisplay extends RestaurantRes {
   ordersCount: number;
 }
 
-const Home: NextPageWithLayout = () => {
-  const { pathname, asPath, push, isReady } = useRouter();
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const { query } = context;
+
+  const data = getData(restaurants, query);
+
+  return {
+    props: {
+      data,
+      query,
+    },
+  };
+};
+
+type HomeProps = {
+  data: RestaurantRes[];
+  query: Partial<{
+    [key: string]: string | string[];
+  }>;
+};
+
+const Home: NextPageWithLayout<HomeProps> = ({ data, query }) => {
+  const { push, asPath, pathname } = useRouter();
   const { orders } = useContext(OrderContext);
   const [dataToDisplay, setDataToDIsplay] = useState<DataToDisplay[]>([]);
-  const [filterValues, setFilterValues] = useState<string[]>(
-    () =>
-      (getQueryParams(asPath, queryName, {
-        getAllMatches: true,
-      }) as string[] | null) ?? []
-  );
-
-  const { data, error, isLoading } = useSWR<RestaurantRes[]>(
-    "/api" + asPath,
-    fetcher
-  );
 
   useEffect(() => {
-    if (!data) return;
-
+    if (data.length === 0) return;
     const handledData: DataToDisplay[] = data.map((i) => {
       const newData = JSON.parse(JSON.stringify(i));
       newData.ordersCount = 0;
@@ -63,71 +68,53 @@ const Home: NextPageWithLayout = () => {
     setDataToDIsplay(handledData);
   }, [data, orders]);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(asPath.replace(/\/\??/, ""));
-    if (filterValues.length === 0 && searchParams.toString() === "") return;
+  const handleFilter = useCallback(
+    (value: string) => {
+      let queryString = asPath.replace(pathname, "");
+      const queryValue = `${queryName}=${value}`;
+      const queryRegExp = new RegExp(`&?${queryValue}`);
 
-    searchParams.delete(queryName);
-    filterValues.forEach((i) => searchParams.append(queryName, i));
-    push(pathname + "?" + searchParams.toString(), undefined, {
-      scroll: false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterValues]);
-
-  // устанавливает значение фильтра из query параметров при ручной навигации
-  // по истории в браузере:
-  useEffect(() => {
-    const queryValue = getQueryParams(asPath, queryName, {
-      getAllMatches: true,
-    }) as string[] | null;
-    if (queryValue === null) {
-      filterValues.length === 0 ? void 0 : setFilterValues([]);
-      return;
-    }
-    if (queryValue.length !== filterValues.length) {
-      return setFilterValues(queryValue);
-    }
-    const isEqual = queryValue.every((i) => filterValues.includes(i));
-    if (!isEqual) return setFilterValues(queryValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, asPath]);
-
-  const handleFilter = useCallback((value: string) => {
-    setFilterValues((prev) => {
-      const clone = [...prev];
-      const targetInd = clone.indexOf(value);
-      if (targetInd >= 0) {
-        clone.splice(targetInd, 1);
-        return clone;
+      if (queryString.includes(queryValue)) {
+        queryString = queryString.replace(queryRegExp, "");
+      } else {
+        queryString = queryString + `&` + queryValue;
       }
-      clone.push(value);
-      return clone;
-    });
-  }, []);
+      const newPath = queryString.startsWith("?")
+        ? pathname + queryString
+        : pathname + "?" + queryString;
+
+      push(newPath, undefined, { scroll: false });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [asPath, pathname]
+  );
 
   const JsxDataList = useMemo(() => {
-    if (data?.length === 0) {
+    if (data.length === 0) {
       return <p>{"Sorry, nothing was found for your query"}</p>;
     }
-    if (data || isLoading) {
-      const cnRestaurantsWrapper = cx("restaurants-wrapper", {
-        ["restaurants-wrapper-loading"]: isLoading,
-      });
-      return dataToDisplay.length === 0 ? (
-        "Loading..."
-      ) : (
-        <div className={cnRestaurantsWrapper}>
-          {dataToDisplay.map((i) => (
-            <RestaurantCard key={i.id} data={i} />
-          ))}
-        </div>
-      );
-    }
-    if (error) {
-      return <p>{"Sorry, an error has occurred. Try again later"}</p>;
-    }
-  }, [data, dataToDisplay, error, isLoading]);
+
+    const cnRestaurantsWrapper = cx("restaurants-wrapper");
+    return (
+      <div className={cnRestaurantsWrapper}>
+        {dataToDisplay.map((i) => (
+          <RestaurantCard key={i.id} data={i} />
+        ))}
+      </div>
+    );
+  }, [data, dataToDisplay]);
+
+  const setFoodCategoryState = useCallback(
+    (title: string) => {
+      const value = query[queryName];
+      return typeof value === "string"
+        ? title === value
+        : typeof value === "object"
+        ? value.includes(title)
+        : false;
+    },
+    [query]
+  );
 
   return (
     <>
@@ -162,7 +149,7 @@ const Home: NextPageWithLayout = () => {
               key={i.id}
               icon={i.icon}
               title={i.title}
-              checked={isReady ? filterValues.includes(i.title) : false}
+              checked={setFoodCategoryState(i.title)}
               onClick={handleFilter}
             />
           ))}

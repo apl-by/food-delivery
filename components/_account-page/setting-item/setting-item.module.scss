@@ -5,7 +5,8 @@
   padding: 16px;
   border: 1px solid var(--color-filled-default);
   border-radius: 16px;
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
   min-height: 72px;
 
   &-active {

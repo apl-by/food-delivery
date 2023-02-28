@@ -50,3 +50,9 @@
     cursor: default;
   }
 }
+
+@media screen and (max-width: 350px) {
+  .button {
+    padding: 0 8px;
+  }
+}

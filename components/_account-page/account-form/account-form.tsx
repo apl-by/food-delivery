@@ -107,9 +107,22 @@ const AccountForm = () => {
             checked={true}
           />
         </fieldset>
+        {/* button-logout-mobile has "display: none" above (max-width: 1000px) */}
+        <Button
+          onClick={() => void 0}
+          variant={"warning"}
+          mix={styles["button-logout-mobile"]}
+        >
+          {"Log out"}
+        </Button>
         <div className={styles["bottom-container"]}>
           <div className={styles["divider"]}></div>
-          <Button onClick={() => void 0} variant={"warning"}>
+          {/* button-logout has "display: none" under (max-width: 1000px) */}
+          <Button
+            onClick={() => void 0}
+            variant={"warning"}
+            mix={styles["button-logout"]}
+          >
             {"Log out"}
           </Button>
           <Button

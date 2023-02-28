@@ -16,11 +16,12 @@ const Deals: NextPageWithLayout = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          maxWidth: "var(--max-width-content)",
           width: "100%",
           margin: "30px auto",
           fontWeight: "600",
           fontSize: "20px",
+          maxWidth: "calc(var(--max-width-content) + 2 * var(--side-padding))",
+          padding: "0 var(--side-padding)",
         }}
       >
         {"Any data for the route '/deals'"}

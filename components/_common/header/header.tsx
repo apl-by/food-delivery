@@ -2,7 +2,7 @@ import styles from "./header.module.scss";
 import Logo from "../logo/logo";
 import Form from "../form/form";
 import SearchInput from "../search-input/search-input";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import NavBar from "../nav-bar/nav-bar";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +11,10 @@ import CartIcon from "../../_home-page/cart-icon/cart-icon";
 import { OrderContext } from "@/contexts/orderContext";
 import { getQueryParams } from "@/utils/utils";
 import { navItems } from "@/data/data";
+import NavButtonIcon from "../../../public/icons/nav-btn.svg";
 import classNames from "classnames/bind";
+import { Portal } from "../portal/portal";
+import Aside from "../aside/aside";
 
 let cx = classNames.bind(styles);
 
@@ -19,6 +22,7 @@ const queryName = "search";
 
 const Header = () => {
   const { pathname, asPath, query, push } = useRouter();
+  const [openNavSideBar, setOpenNavSideBar] = useState(false);
   const [searchValue, setSearchValue] = useState(
     () => (getQueryParams(asPath, queryName) as string) ?? ""
   );
@@ -45,6 +49,8 @@ const Header = () => {
     push(pathname + "?" + searchParams.toString());
   };
 
+  const closeNavSideBar = useCallback(() => setOpenNavSideBar(false), []);
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -52,6 +58,7 @@ const Header = () => {
           <Link href={"/"}>
             <Logo />
           </Link>
+          {/* Form has "display: none" under (max-width: 768px) */}
           {pathname === "/" && (
             <Form noValidate onSubmit={handleSubmit} mix={styles["mix-form"]}>
               <SearchInput
@@ -65,7 +72,12 @@ const Header = () => {
           )}
         </div>
         <div className={styles.wrapper}>
-          <NavBar navData={navItems} currentPath={pathname} />
+          {/* NavBar has "display: none" under (max-width: 768px) */}
+          <NavBar
+            navData={navItems}
+            currentPath={pathname}
+            mix={styles["mix-navbar"]}
+          />
           <Link
             className={cx("cart", { ["cart-active"]: pathname === "/cart" })}
             data-count={totalCount}
@@ -90,8 +102,24 @@ const Header = () => {
               ></Image>
             }
           </Link>
+          {/* "mobile-navbar" has "display: none" above (max-width: 768px) */}
+          <div className={styles["mobile-navbar"]}>
+            <div className={styles.divider}></div>
+            <button
+              type={"button"}
+              className={styles["nav-button"]}
+              onClick={() => setOpenNavSideBar(true)}
+            >
+              <NavButtonIcon />
+            </button>
+          </div>
         </div>
       </div>
+      <Portal id="modal">
+        <Aside isOpen={openNavSideBar} onClose={closeNavSideBar}>
+          <NavBar navData={navItems} currentPath={pathname} mod={"column"} />
+        </Aside>
+      </Portal>
     </header>
   );
 };

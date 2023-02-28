@@ -8,14 +8,20 @@ let cx = classNames.bind(styles);
 type NavBarProps = {
   currentPath: string;
   navData: NavItem[];
+  mix?: string;
+  mod?: "column";
 };
 
-const NavBar = ({ currentPath, navData }: NavBarProps) => {
+const NavBar = ({ currentPath, navData, mix, mod }: NavBarProps) => {
+  const cnNav = cx("nav", mix);
+  const cnList = cx("list", { [`list-${mod}`]: mod });
+  const cnItem = cx("item", { [`item-${mod}`]: mod });
+
   return (
-    <nav className={styles.nav}>
-      <ul className={styles.list}>
+    <nav className={cnNav}>
+      <ul className={cnList}>
         {navData.map((i) => (
-          <li className={styles.item} key={i.id}>
+          <li className={cnItem} key={i.id}>
             <Link
               className={cx("link", {
                 ["link-active"]: currentPath === i.link,

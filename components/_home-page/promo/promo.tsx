@@ -30,8 +30,10 @@ const Promo = ({ img, alt, mod, title, info, category }: PromoProps) => {
         />
       </div>
       <div className={styles["info-wrapper"]}>
-        <h2 className={styles.title}>{title}</h2>
-        <p className={cnInfo}>{info}</p>
+        <div className={styles["info-container"]}>
+          <h2 className={styles.title}>{title}</h2>
+          <p className={cnInfo}>{info}</p>
+        </div>
         <p className={styles.category}>{category}</p>
       </div>
     </div>
