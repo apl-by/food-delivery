@@ -1,0 +1,49 @@
+$max-width: 360px;
+.form {
+  width: 100%;
+}
+
+.modal {
+  max-width: $max-width;
+  width: 100%;
+  min-height: 200px;
+  background: var(--color-filled-default);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  position: relative;
+
+  margin: 20px;
+}
+
+.title {
+  margin-top: 28px;
+  margin-bottom: 6px;
+  max-width: $max-width * 0.7;
+  text-align: center;
+  font-size: 18px;
+}
+
+.close-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--text-color-seondary-light);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.input {
+  margin-bottom: 10px;
+}
+
+.submit {
+  width: 100% !important;
+  margin-top: 10px;
+}

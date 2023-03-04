@@ -22,7 +22,7 @@ export type LoginInputValues = {
 };
 
 const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
-  const [inputValues, setInputValues] = useState({
+  const [inputValues, setInputValues] = useState<LoginInputValues>({
     email: "",
     password: "",
     checkbox: false,

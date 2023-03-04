@@ -9,6 +9,7 @@ type TextInputProps = {
   name: string;
   readOnly?: boolean;
   placeholder?: string;
+  pattern?: string;
   label?: string;
   mix?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,6 +19,7 @@ const TextInput = ({
   value,
   name,
   placeholder,
+  pattern,
   label,
   mix,
   onChange,
@@ -50,6 +52,7 @@ const TextInput = ({
         required
         maxLength={100}
         readOnly={readOnly}
+        pattern={pattern}
       />
     </div>
   );

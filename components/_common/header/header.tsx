@@ -16,6 +16,7 @@ import classNames from "classnames/bind";
 import { Portal } from "../portal/portal";
 import Aside from "../aside/aside";
 import { useAuth } from "@/hooks/useAuth";
+import { asidePortalId } from "@/data/settings";
 
 let cx = classNames.bind(styles);
 
@@ -119,7 +120,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <Portal id="modal">
+      <Portal id={asidePortalId}>
         <Aside isOpen={openNavSideBar} onClose={closeNavSideBar}>
           <NavBar navData={navItems} currentPath={pathname} mod={"column"} />
         </Aside>
