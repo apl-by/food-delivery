@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
-import AccountLayout from "@/components/account-layout/account-layout";
+import AccountLayout from "@/components/_layouts/account-layout/account-layout";
 
 const Address: NextPageWithLayout = () => {
   return (

@@ -34,6 +34,12 @@
     color: var(--text-color-white);
   }
 
+  &-filled-disabled {
+    border: none;
+    background-color: var(--color-filled-default);
+    color: var(--text-color-seondary-default);
+  }
+
   &-mod-meal-card {
     background: #f3f4ff;
     color: #4e60ff;

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import styles from "./account-layout.module.scss";
 import classNames from "classnames/bind";
-import SettingList from "../_account-page/setting-list/setting-list";
+import SettingList from "../../_account-page/setting-list/setting-list";
 import Layout from "../layout/layout";
 
 let cx = classNames.bind(styles);

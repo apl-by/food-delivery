@@ -7,6 +7,7 @@ let cx = classNames.bind(styles);
 type TextInputProps = {
   value: string;
   name: string;
+  readOnly?: boolean;
   placeholder?: string;
   label?: string;
   mix?: string;
@@ -20,6 +21,7 @@ const TextInput = ({
   label,
   mix,
   onChange,
+  readOnly,
 }: TextInputProps) => {
   const id = useId();
 
@@ -46,6 +48,8 @@ const TextInput = ({
         onChange={handleChange}
         className={cnInput}
         required
+        maxLength={100}
+        readOnly={readOnly}
       />
     </div>
   );

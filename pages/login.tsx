@@ -1,12 +1,27 @@
-import AuthLayout from "@/components/auth-layout/auth-layout";
-import LoginForm from "@/components/_common/login-form/login-form";
+import AuthLayout from "@/components/_layouts/auth-layout/auth-layout";
+import LoginForm, {
+  LoginInputValues,
+} from "@/components/_common/login-form/login-form";
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
 import styles from "../styles/login.module.scss";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
+  const { user, auth, signIn } = useAuth();
+
+  const handleLoginSubmit = async (formData: LoginInputValues) => {
+    const { email, password } = formData;
+
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -19,7 +34,7 @@ const Login = () => {
         <Link href={"/"} className={styles.logo}>
           <Logo />
         </Link>
-        <LoginForm mix={styles["login-form"]} />
+        <LoginForm mix={styles["login-form"]} onSubmit={handleLoginSubmit} />
       </div>
     </>
   );

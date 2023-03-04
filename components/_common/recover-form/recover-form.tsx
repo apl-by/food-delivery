@@ -9,13 +9,21 @@ import classNames from "classnames/bind";
 let cx = classNames.bind(styles);
 
 type RecoverFormProps = {
+  onSubmit: (formData: RecoverInputValues) => void;
   mix?: string;
 };
 
-const RecoverForm = ({ mix }: RecoverFormProps) => {
-  const [inputValues, setInputValues] = useState({
+export type RecoverInputValues = { email: string };
+
+const RecoverForm = ({ mix, onSubmit }: RecoverFormProps) => {
+  const [inputValues, setInputValues] = useState<RecoverInputValues>({
     email: "",
   });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(inputValues);
+  };
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,7 +35,7 @@ const RecoverForm = ({ mix }: RecoverFormProps) => {
   const cnInput = cx("input");
   const cnQuestion = cx("question", "text");
   return (
-    <Form className={cnForm}>
+    <Form className={cnForm} onSubmit={handleSubmit}>
       <h1 className={styles.title}>Recover</h1>
       <p className={cnDescription}>
         {

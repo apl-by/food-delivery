@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import Layout from "../components/layout/layout";
+import Layout from "../components/_layouts/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 import Promo from "../components/_home-page/promo/promo";
 import styles from "../styles/home.module.scss";

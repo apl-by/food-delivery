@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { ReactElement } from "react";
-import Layout from "../components/layout/layout";
+import Layout from "../components/_layouts/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 
 const Cart: NextPageWithLayout = () => {

@@ -8,7 +8,7 @@ type CheckboxProps = {
   disabled?: boolean;
   children: ReactNode;
   type?: "button" | "submit" | "reset" | undefined;
-  variant?: "warning" | "filled" | "disabled";
+  variant?: "warning" | "filled" | "disabled" | "filled-disabled";
   mod?: "meal-card" | "review-card";
   mix?: string;
   onClick: (e: React.SyntheticEvent) => void;

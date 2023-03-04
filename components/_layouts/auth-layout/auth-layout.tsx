@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import styles from "./auth-layout.module.scss";
-import MealCard from "../_common/meal-card/meal-card";
-import MealCardSecond from "../_common/meal-card-second/meal-card-second";
-import ReviewCard from "../_common/review-card/review-card";
+import MealCard from "../../_common/meal-card/meal-card";
+import MealCardSecond from "../../_common/meal-card-second/meal-card-second";
+import ReviewCard from "../../_common/review-card/review-card";
 import classNames from "classnames/bind";
 
 let cx = classNames.bind(styles);
@@ -10,6 +10,8 @@ let cx = classNames.bind(styles);
 type AuthLayoutProps = { children: ReactNode };
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
+  // if (user?.isLoggedIn === true || !user) return null;
+
   return (
     <main className={styles.main}>
       <div className={styles["left-wrapper"]}>{children}</div>

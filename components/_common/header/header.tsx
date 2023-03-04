@@ -15,12 +15,15 @@ import NavButtonIcon from "../../../public/icons/nav-btn.svg";
 import classNames from "classnames/bind";
 import { Portal } from "../portal/portal";
 import Aside from "../aside/aside";
+import { useAuth } from "@/hooks/useAuth";
 
 let cx = classNames.bind(styles);
 
 const queryName = "search";
 
 const Header = () => {
+  const { user } = useAuth();
+
   const { pathname, asPath, query, push } = useRouter();
   const [openNavSideBar, setOpenNavSideBar] = useState(false);
   const [searchValue, setSearchValue] = useState(
@@ -51,6 +54,7 @@ const Header = () => {
 
   const closeNavSideBar = useCallback(() => setOpenNavSideBar(false), []);
 
+  if (!user) return null;
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -93,7 +97,7 @@ const Header = () => {
           >
             {
               <Image
-                src={"/avatar.png"}
+                src={user.photoURL !== "" ? user.photoURL : "/user-avatar.png"}
                 alt={"avatar"}
                 width={50}
                 height={50}

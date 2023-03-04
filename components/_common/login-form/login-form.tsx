@@ -11,15 +11,27 @@ import classNames from "classnames/bind";
 let cx = classNames.bind(styles);
 
 type LoginFormProps = {
+  onSubmit: (formData: LoginInputValues) => void;
   mix?: string;
 };
 
-const LoginForm = ({ mix }: LoginFormProps) => {
+export type LoginInputValues = {
+  email: string;
+  password: string;
+  checkbox: boolean;
+};
+
+const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
   const [inputValues, setInputValues] = useState({
     email: "",
     password: "",
     checkbox: false,
   });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(inputValues);
+  };
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked, type } = e.target;
@@ -34,7 +46,7 @@ const LoginForm = ({ mix }: LoginFormProps) => {
   const cnQuestion = cx("question", "text");
 
   return (
-    <Form className={cnLoginForm}>
+    <Form className={cnLoginForm} onSubmit={handleSubmit}>
       <h1 className={styles.title}>Login</h1>
       <p className={cnDescription}>
         {" Sign in with your data that you entered during your registration."}

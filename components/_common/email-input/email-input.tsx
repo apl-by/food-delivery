@@ -5,6 +5,7 @@ import classNames from "classnames/bind";
 let cx = classNames.bind(styles);
 
 type EmailInputProps = {
+  readOnly?: boolean;
   value: string;
   name: string;
   placeholder?: string;
@@ -20,6 +21,7 @@ const EmailInput = ({
   label,
   mix,
   onChange,
+  readOnly,
 }: EmailInputProps) => {
   const id = useId();
 
@@ -46,6 +48,8 @@ const EmailInput = ({
         onChange={handleChange}
         className={cnInput}
         required
+        maxLength={100}
+        readOnly={readOnly}
       />
     </div>
   );

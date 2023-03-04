@@ -134,3 +134,12 @@ export const settings = [
     to: "/account/security",
   },
 ];
+
+export const initCheckboxes: [string, boolean][] = [
+  ["deals", false],
+  ["restaurants", false],
+  ["orderStatuses", false],
+  ["passwordChanges", false],
+  ["specialOffers", false],
+  ["newsletter", false],
+];

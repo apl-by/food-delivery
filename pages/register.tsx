@@ -1,12 +1,27 @@
-import AuthLayout from "@/components/auth-layout/auth-layout";
-import RegisterForm from "@/components/_common/register-form/register-form";
+import AuthLayout from "@/components/_layouts/auth-layout/auth-layout";
+import RegisterForm, {
+  RegisterInputValues,
+} from "@/components/_common/register-form/register-form";
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
 import { ReactElement } from "react";
 import styles from "../styles/register.module.scss";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 const Register = () => {
+  const { user, auth, signUp } = useAuth();
+
+  const handleRegisterSubmit = async (formData: RegisterInputValues) => {
+    const { email, password } = formData;
+
+    try {
+      await signUp(email, password);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -19,7 +34,10 @@ const Register = () => {
         <Link href={"/"}>
           <Logo />
         </Link>
-        <RegisterForm mix={styles["register-form"]} />
+        <RegisterForm
+          mix={styles["register-form"]}
+          onSubmit={handleRegisterSubmit}
+        />
       </div>
     </>
   );

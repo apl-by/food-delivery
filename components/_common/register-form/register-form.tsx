@@ -10,14 +10,22 @@ import classNames from "classnames/bind";
 let cx = classNames.bind(styles);
 
 type RegisterFormProps = {
+  onSubmit: (formData: RegisterInputValues) => void;
   mix?: string;
 };
 
-const RegisterForm = ({ mix }: RegisterFormProps) => {
-  const [inputValues, setInputValues] = useState({
+export type RegisterInputValues = { email: string; password: string };
+
+const RegisterForm = ({ mix, onSubmit }: RegisterFormProps) => {
+  const [inputValues, setInputValues] = useState<RegisterInputValues>({
     email: "",
     password: "",
   });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(inputValues);
+  };
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,7 +37,7 @@ const RegisterForm = ({ mix }: RegisterFormProps) => {
   const cnInput = cx("input");
   const cnQuestion = cx("question", "text");
   return (
-    <Form className={cnForm}>
+    <Form className={cnForm} onSubmit={handleSubmit}>
       <h1 className={styles.title}>Register</h1>
       <p className={cnDescription}>
         {"Register a new account by entering your email address and password"}

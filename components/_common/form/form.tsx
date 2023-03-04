@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import styles from "./form.module.scss";
 import classNames from "classnames/bind";
 
@@ -10,14 +10,18 @@ type FormProps = {
   mix?: string;
 } & React.FormHTMLAttributes<HTMLFormElement>;
 
-const Form = ({ children, className, mix, ...props }: FormProps) => {
-  const cnForm = cx("form", className, mix);
+const Form = forwardRef<HTMLFormElement, FormProps>(
+  ({ children, className, mix, ...props }, ref) => {
+    const cnForm = cx("form", className, mix);
 
-  return (
-    <form className={cnForm} {...props}>
-      {children}
-    </form>
-  );
-};
+    return (
+      <form className={cnForm} {...props} ref={ref}>
+        {children}
+      </form>
+    );
+  }
+);
+
+Form.displayName = "Form";
 
 export default Form;

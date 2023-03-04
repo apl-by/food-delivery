@@ -2,25 +2,39 @@ import Head from "next/head";
 import { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import styles from "../../styles/account/account.module.scss";
-import useSWR from "swr";
 import { useRouter } from "next/router";
 import classNames from "classnames/bind";
-import AccountForm from "@/components/_account-page/account-form/account-form";
-import AccountLayout from "@/components/account-layout/account-layout";
+import AccountForm, {
+  AccountInputValues,
+  ChangedKeys,
+} from "@/components/_account-page/account-form/account-form";
+import AccountLayout from "@/components/_layouts/account-layout/account-layout";
+import { useAuth } from "@/hooks/useAuth";
+import { splitter } from "@/data/settings";
 
 let cx = classNames.bind(styles);
 
-// const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 const Account: NextPageWithLayout = () => {
-  const { pathname, asPath, push, isReady } = useRouter();
+  const { user, updName, updEmail } = useAuth();
 
-  console.log(asPath, pathname);
+  const handleAccountSubmit = async (
+    formData: AccountInputValues,
+    keys: ChangedKeys
+  ) => {
+    const { firstName, secondName, email, phoneNumber, checkbox } = formData;
+    if (keys.length === 0) return;
+    if (keys.includes("firstName") || keys.includes("secondName")) {
+      const displayName = firstName + splitter + secondName;
+      updName({ displayName });
+    }
+    if (keys.includes("email")) {
+      updEmail(email).catch((e) => console.log("err", e));
+    }
+    if (keys.includes("phoneNumber") || keys.includes("checkbox")) {
+    }
+  };
 
-  // const { data, error, isLoading } = useSWR<RestaurantRes[]>(
-  //   "/api" + asPath,
-  //   fetcher
-  // );
+  if (!user) return null;
 
   return (
     <>
@@ -30,7 +44,7 @@ const Account: NextPageWithLayout = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AccountForm />
+      <AccountForm onSubmit={handleAccountSubmit} user={user} />
     </>
   );
 };

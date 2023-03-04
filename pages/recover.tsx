@@ -1,12 +1,27 @@
-import AuthLayout from "@/components/auth-layout/auth-layout";
+import AuthLayout from "@/components/_layouts/auth-layout/auth-layout";
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
 import { ReactElement } from "react";
 import styles from "../styles/recover.module.scss";
 import Link from "next/link";
-import RecoverForm from "@/components/_common/recover-form/recover-form";
+import RecoverForm, {
+  RecoverInputValues,
+} from "@/components/_common/recover-form/recover-form";
+import { useAuth } from "@/hooks/useAuth";
 
 const Recover = () => {
+  const { user, auth, resetPassword } = useAuth();
+
+  const handleRecoverSubmit = async (formData: RecoverInputValues) => {
+    const { email } = formData;
+
+    try {
+      await resetPassword(email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -19,7 +34,10 @@ const Recover = () => {
         <Link href={"/"}>
           <Logo />
         </Link>
-        <RecoverForm mix={styles["recover-form"]} />
+        <RecoverForm
+          mix={styles["recover-form"]}
+          onSubmit={handleRecoverSubmit}
+        />
       </div>
     </>
   );

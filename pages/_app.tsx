@@ -2,8 +2,9 @@ import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
-import { Nunito } from "@next/font/google";
 import { OrderContext, OrderType } from "@/contexts/orderContext";
+import { Nunito } from "@next/font/google";
+import AuthProvider from "@/components/auth-provider/auth-provider";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -45,16 +46,18 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <OrderContext.Provider value={fakeOrder}>
-      {getLayout(
-        <>
-          <style jsx global>{`
-            html {
-              font-family: ${nunito.style.fontFamily};
-            }
-          `}</style>
-          <Component {...pageProps} />
-        </>
-      )}
+      <AuthProvider>
+        {getLayout(
+          <>
+            <style jsx global>{`
+              html {
+                font-family: ${nunito.style.fontFamily};
+              }
+            `}</style>
+            <Component {...pageProps} />
+          </>
+        )}
+      </AuthProvider>
     </OrderContext.Provider>
   );
 }
