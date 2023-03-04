@@ -1,10 +1,14 @@
 import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useReducer } from "react";
 import type { NextPage } from "next";
-import { OrderContext, OrderType } from "@/contexts/orderContext";
+import { StateContext } from "@/contexts/stateContext";
 import { Nunito } from "@next/font/google";
 import AuthProvider from "@/components/auth-provider/auth-provider";
+import { Portal } from "@/components/_common/portal/portal";
+import { modalPortalId } from "@/data/settings";
+import ModalReLogin from "@/components/_common/modal-re-login/modal-re-login";
+import { initialState, reducer } from "@/services/reducer/reducer";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -16,36 +20,13 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// example of a fake order
-const fakeOrder: OrderType = {
-  get totalCount() {
-    return this.orders.reduce((prev, i) => {
-      return prev + i.count;
-    }, 0);
-  },
-  orders: [
-    {
-      id: 0,
-      restaurant: "Burgers & Pizza",
-      category: "Pizza",
-      meal: "pepperoni",
-      count: 2,
-    },
-    {
-      id: 1,
-      restaurant: "Royal Sushi House",
-      category: "Sushi",
-      meal: "filadelfia",
-      count: 1,
-    },
-  ],
-};
-
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <OrderContext.Provider value={fakeOrder}>
+    <StateContext.Provider value={{ state, dispatch }}>
       <AuthProvider>
         {getLayout(
           <>
@@ -55,9 +36,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               }
             `}</style>
             <Component {...pageProps} />
+            {/* <Portal id={modalPortalId}>
+              <ModalReLogin onClose={() => void 0} onSubmit={() => void 0} />
+            </Portal> */}
           </>
         )}
       </AuthProvider>
-    </OrderContext.Provider>
+    </StateContext.Provider>
   );
 }

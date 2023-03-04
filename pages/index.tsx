@@ -1,12 +1,5 @@
 import Head from "next/head";
-import {
-  ReactElement,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../components/_layouts/layout/layout";
 import type { NextPageWithLayout } from "./_app";
 import Promo from "../components/_home-page/promo/promo";
@@ -15,10 +8,10 @@ import FoodCategory from "../components/_home-page/food-category/food-category";
 import { categories, restaurants } from "../data/data";
 import { useRouter } from "next/router";
 import RestaurantCard from "@/components/_home-page/restaurant-card/restaurant-card";
-import { OrderContext } from "@/contexts/orderContext";
 import { getData, RestaurantRes } from "@/utils/utils";
 import { GetServerSideProps } from "next";
 import classNames from "classnames/bind";
+import { useAppState } from "@/hooks/useAppState";
 
 let cx = classNames.bind(styles);
 
@@ -49,7 +42,8 @@ type HomeProps = {
 
 const Home: NextPageWithLayout<HomeProps> = ({ data, query }) => {
   const { push, asPath, pathname } = useRouter();
-  const { orders } = useContext(OrderContext);
+  const { state } = useAppState();
+  const list = state.order.list;
   const [dataToDisplay, setDataToDIsplay] = useState<DataToDisplay[]>([]);
 
   useEffect(() => {
@@ -57,7 +51,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ data, query }) => {
     const handledData: DataToDisplay[] = data.map((i) => {
       const newData = JSON.parse(JSON.stringify(i));
       newData.ordersCount = 0;
-      orders.forEach((order) =>
+      list.forEach((order) =>
         order.restaurant === i.title
           ? (newData.ordersCount += order.count)
           : void 0
@@ -66,7 +60,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ data, query }) => {
     });
 
     setDataToDIsplay(handledData);
-  }, [data, orders]);
+  }, [data, list]);
 
   const handleFilter = useCallback(
     (value: string) => {

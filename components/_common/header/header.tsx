@@ -2,13 +2,12 @@ import styles from "./header.module.scss";
 import Logo from "../logo/logo";
 import Form from "../form/form";
 import SearchInput from "../search-input/search-input";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import NavBar from "../nav-bar/nav-bar";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import CartIcon from "../../_home-page/cart-icon/cart-icon";
-import { OrderContext } from "@/contexts/orderContext";
 import { getQueryParams } from "@/utils/utils";
 import { navItems } from "@/data/data";
 import NavButtonIcon from "../../../public/icons/nav-btn.svg";
@@ -17,6 +16,7 @@ import { Portal } from "../portal/portal";
 import Aside from "../aside/aside";
 import { useAuth } from "@/hooks/useAuth";
 import { asidePortalId } from "@/data/settings";
+import { useAppState } from "@/hooks/useAppState";
 
 let cx = classNames.bind(styles);
 
@@ -30,7 +30,8 @@ const Header = () => {
   const [searchValue, setSearchValue] = useState(
     () => (getQueryParams(asPath, queryName) as string) ?? ""
   );
-  const { totalCount } = useContext(OrderContext);
+  const { state } = useAppState();
+  const totalCount = state.order.totalCount;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
