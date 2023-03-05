@@ -10,9 +10,9 @@ export const handleError = (error: Error, from?: ErrorFrom) => {
     if (
       from === "signIn" &&
       (code === "auth/invalid-email" ||
-        "auth/wrong-password" ||
-        "auth/invalid-password" ||
-        "auth/user-not-found")
+        code === "auth/wrong-password" ||
+        code === "auth/invalid-password" ||
+        code === "auth/user-not-found")
     ) {
       return {
         name,
@@ -30,11 +30,11 @@ export const handleError = (error: Error, from?: ErrorFrom) => {
     if (
       from === "reSignIn" &&
       (code === "auth/invalid-email" ||
-        "auth/wrong-password" ||
-        "auth/invalid-password" ||
-        "auth/user-not-found" ||
-        "auth/user-mismatch" ||
-        "auth/invalid-credential")
+        code === "auth/wrong-password" ||
+        code === "auth/invalid-password" ||
+        code === "auth/user-not-found" ||
+        code === "auth/user-mismatch" ||
+        code === "auth/invalid-credential")
     ) {
       return {
         name,
@@ -42,8 +42,15 @@ export const handleError = (error: Error, from?: ErrorFrom) => {
       };
     }
 
-    if (code === "auth/email-already-exists" || "auth/email-already-in-use") {
-      return { name, message: "Such email is already exist" };
+    if (
+      code === "auth/email-already-exists" ||
+      code === "auth/email-already-in-use"
+    ) {
+      return { name, message: "This email is already exist" };
+    }
+
+    if (code === "auth/user-not-found") {
+      return { name, message: "The user with this email was not found" };
     }
 
     if (code === "auth/invalid-password") {

@@ -42,6 +42,8 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
 
   const resetPassword = useCallback((email: string): Promise<void> => {
     return sendPasswordResetEmail(auth, email).catch((e) => {
+      console.log(e);
+
       throw handleError(e);
     });
   }, []);
