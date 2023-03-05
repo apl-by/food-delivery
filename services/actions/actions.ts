@@ -1,0 +1,2 @@
+export const ADD_MODAL_INFO = "ADD_MODAL_INFO";
+export const DELETE_MODAL_INFO = "DELETE_MODAL_INFO";

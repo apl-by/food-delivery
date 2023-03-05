@@ -7,18 +7,33 @@ import Link from "next/link";
 import RecoverForm, {
   RecoverInputValues,
 } from "@/components/_common/recover-form/recover-form";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
+import { useAppState } from "@/hooks/use-app-state";
+import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Recover = () => {
-  const { user, auth, resetPassword } = useAuth();
+  const { resetPassword } = useAuth();
+  const { dispatch } = useAppState();
 
   const handleRecoverSubmit = async (formData: RecoverInputValues) => {
     const { email } = formData;
 
     try {
       await resetPassword(email);
-    } catch (error) {
-      console.log(error);
+      dispatch({
+        type: ADD_MODAL_INFO,
+        payload: {
+          type: "notification",
+          info: {
+            message: `The letter was sent to the address "${email}". Go to this email address and set a new password`,
+          },
+        },
+      });
+    } catch (error: any) {
+      dispatch({
+        type: ADD_MODAL_INFO,
+        payload: { type: "error", info: error },
+      });
     }
   };
 

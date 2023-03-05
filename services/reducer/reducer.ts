@@ -1,17 +1,5 @@
-import { ADD_ERROR, DELETE_ERROR, ErrorActions } from "../actions/errors";
-
-type Order = {
-  id: number;
-  restaurant: string;
-  category: string;
-  meal: string;
-  count: number;
-};
-
-export type OrderType = {
-  readonly totalCount: number;
-  list: Order[];
-};
+import { ADD_MODAL_INFO, DELETE_MODAL_INFO } from "../actions/actions";
+import { Actions, OrderType, State } from "../types";
 
 // example of the fake order
 const fakeOrder: OrderType = {
@@ -38,23 +26,18 @@ const fakeOrder: OrderType = {
   ],
 };
 
-export type State = {
-  order: OrderType;
-  errors: string[];
-};
-
 export const initialState: State = {
   order: fakeOrder,
-  errors: [],
+  modalQueue: [],
 };
 
-export const reducer = (state: State, action: ErrorActions): State => {
+export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
-    case ADD_ERROR:
-      return { ...state, errors: [...state.errors, action.payload] };
-    case DELETE_ERROR:
-      const newArr = state.errors.slice(1);
-      return { ...state, errors: [...newArr] };
+    case ADD_MODAL_INFO:
+      return { ...state, modalQueue: [...state.modalQueue, action.payload] };
+    case DELETE_MODAL_INFO:
+      const newArr = state.modalQueue.slice(1);
+      return { ...state, modalQueue: [...newArr] };
     default:
       throw new Error(`Unknow action type: ${(action as any).type}`);
   }

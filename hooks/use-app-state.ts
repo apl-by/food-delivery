@@ -1,4 +1,4 @@
-import { StateContext } from "@/contexts/stateContext";
+import { StateContext } from "@/contexts/state-context";
 import { useContext } from "react";
 
 export const useAppState = () => {

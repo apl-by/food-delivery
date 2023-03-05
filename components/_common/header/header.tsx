@@ -14,9 +14,9 @@ import NavButtonIcon from "../../../public/icons/nav-btn.svg";
 import classNames from "classnames/bind";
 import { Portal } from "../portal/portal";
 import Aside from "../aside/aside";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { asidePortalId } from "@/data/settings";
-import { useAppState } from "@/hooks/useAppState";
+import { useAppState } from "@/hooks/use-app-state";
 
 let cx = classNames.bind(styles);
 

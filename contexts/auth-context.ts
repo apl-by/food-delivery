@@ -1,4 +1,4 @@
-import { Auth, User, UserCredential } from "firebase/auth";
+import { Auth, UserCredential } from "firebase/auth";
 import React from "react";
 
 export type UserInfo = {
@@ -19,8 +19,8 @@ export type AuthContextType = {
   auth: Auth;
   user: UserInfo | null;
   wasFirstAuthCheck: boolean;
-  signIn: (email: string, password: string) => Promise<UserCredential>;
-  signUp: (email: string, password: string) => Promise<UserCredential>;
+  signIn: (email: string, password: string) => Promise<UserCredential | void>;
+  signUp: (email: string, password: string) => Promise<UserCredential | void>;
   resetPassword: (email: string) => Promise<void>;
   updName: (data: UpdNameData) => Promise<void>;
   updEmail: (email: string) => Promise<void>;

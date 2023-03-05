@@ -7,18 +7,24 @@ import Head from "next/head";
 import { ReactElement } from "react";
 import styles from "../styles/register.module.scss";
 import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
+import { useAppState } from "@/hooks/use-app-state";
+import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Register = () => {
-  const { user, auth, signUp } = useAuth();
+  const { signUp } = useAuth();
+  const { dispatch } = useAppState();
 
   const handleRegisterSubmit = async (formData: RegisterInputValues) => {
     const { email, password } = formData;
 
     try {
       await signUp(email, password);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      dispatch({
+        type: ADD_MODAL_INFO,
+        payload: { type: "error", info: error },
+      });
     }
   };
 

@@ -2,14 +2,13 @@ import Head from "next/head";
 import { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import styles from "../../styles/account/account.module.scss";
-import { useRouter } from "next/router";
 import classNames from "classnames/bind";
 import AccountForm, {
   AccountInputValues,
   ChangedKeys,
 } from "@/components/_account-page/account-form/account-form";
 import AccountLayout from "@/components/_layouts/account-layout/account-layout";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { splitter } from "@/data/settings";
 
 let cx = classNames.bind(styles);
@@ -25,10 +24,12 @@ const Account: NextPageWithLayout = () => {
     if (keys.length === 0) return;
     if (keys.includes("firstName") || keys.includes("secondName")) {
       const displayName = firstName + splitter + secondName;
-      updName({ displayName });
+      updName({ displayName }).catch((e) => console.log(e));
     }
     if (keys.includes("email")) {
-      updEmail(email).catch((e) => console.log("err", e));
+      updEmail(email).catch((e) =>
+        console.log(e.code, "&&&", e.name, "&&&", e.message)
+      );
     }
     if (keys.includes("phoneNumber") || keys.includes("checkbox")) {
     }

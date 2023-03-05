@@ -1,10 +1,9 @@
-import { ErrorActions } from "@/services/actions/errors";
-import { State } from "@/services/reducer/reducer";
+import { Actions, State } from "@/services/types";
 import React, { Dispatch } from "react";
 
 export type StateContextValue = {
   state: State;
-  dispatch: Dispatch<ErrorActions>;
+  dispatch: Dispatch<Actions>;
 };
 
 export const StateContext = React.createContext<StateContextValue>(

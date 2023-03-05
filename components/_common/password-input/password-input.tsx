@@ -49,7 +49,7 @@ const PasswordInput = ({
           placeholder={placeholder}
           onChange={handleChange}
           className={cnInput}
-          minLength={5}
+          minLength={6}
           maxLength={40}
           required
         />

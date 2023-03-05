@@ -1,5 +1,6 @@
-import { AuthContext, UpdNameData, UserInfo } from "@/contexts/authContext";
-import { auth } from "@/utils/initFirebase";
+import { AuthContext, UpdNameData, UserInfo } from "@/contexts/auth-context";
+import { handleError } from "@/utils/errors-handler";
+import { auth } from "@/utils/init-firebase";
 import { handleUserInfo } from "@/utils/utils";
 import {
   createUserWithEmailAndPassword,
@@ -20,21 +21,29 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const [wasFirstAuthCheck, setFirstAuthCheck] = useState(false);
 
   const signUp = useCallback(
-    (email: string, password: string): Promise<UserCredential> => {
-      return createUserWithEmailAndPassword(auth, email, password);
+    (email: string, password: string): Promise<UserCredential | void> => {
+      return createUserWithEmailAndPassword(auth, email, password).catch(
+        (e) => {
+          throw handleError(e, "signUp");
+        }
+      );
     },
     []
   );
 
   const signIn = useCallback(
-    (email: string, password: string): Promise<UserCredential> => {
-      return signInWithEmailAndPassword(auth, email, password);
+    (email: string, password: string): Promise<UserCredential | void> => {
+      return signInWithEmailAndPassword(auth, email, password).catch((e) => {
+        throw handleError(e, "signIn");
+      });
     },
     []
   );
 
   const resetPassword = useCallback((email: string): Promise<void> => {
-    return sendPasswordResetEmail(auth, email);
+    return sendPasswordResetEmail(auth, email).catch((e) => {
+      throw handleError(e);
+    });
   }, []);
 
   const updName = useCallback((data: UpdNameData): Promise<void> => {

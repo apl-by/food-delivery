@@ -7,18 +7,24 @@ import Head from "next/head";
 import Link from "next/link";
 import { ReactElement } from "react";
 import styles from "../styles/login.module.scss";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
+import { useAppState } from "@/hooks/use-app-state";
+import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Login = () => {
-  const { user, auth, signIn } = useAuth();
+  const { signIn } = useAuth();
+  const { dispatch } = useAppState();
 
   const handleLoginSubmit = async (formData: LoginInputValues) => {
     const { email, password } = formData;
 
     try {
       await signIn(email, password);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      dispatch({
+        type: ADD_MODAL_INFO,
+        payload: { type: "error", info: error },
+      });
     }
   };
 

@@ -8,7 +8,7 @@ import TelInput from "@/components/_common/tel-input/tel-input";
 import Checkbox from "@/components/_common/checkbox/checkbox";
 import classNames from "classnames/bind";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
-import { UserInfo } from "@/contexts/authContext";
+import { UserInfo } from "@/contexts/auth-context";
 import { initCheckboxes } from "@/data/data";
 
 let cx = classNames.bind(styles);

@@ -11,7 +11,7 @@ import RestaurantCard from "@/components/_home-page/restaurant-card/restaurant-c
 import { getData, RestaurantRes } from "@/utils/utils";
 import { GetServerSideProps } from "next";
 import classNames from "classnames/bind";
-import { useAppState } from "@/hooks/useAppState";
+import { useAppState } from "@/hooks/use-app-state";
 
 let cx = classNames.bind(styles);
 

@@ -1,4 +1,4 @@
-import styles from "./modal-re-login.module.scss";
+import styles from "./modal-re-sign-in.module.scss";
 import classNames from "classnames/bind";
 import CloseIcon from "../../../public/icons/close-icon.svg";
 import ModalOverlay from "../modal-overlay/modal-overlay";
@@ -10,18 +10,18 @@ import Form from "../form/form";
 
 let cx = classNames.bind(styles);
 
-type ModalReLoginProps = {
+type ModalReSignInProps = {
   onClose: () => void;
-  onSubmit: (formData: ReLoginInputValues) => void;
+  onSubmit: (formData: ReSignInInputValues) => void;
 };
 
-export type ReLoginInputValues = {
+export type ReSignInInputValues = {
   email: string;
   password: string;
 };
 
-const ModalReLogin = ({ onClose, onSubmit }: ModalReLoginProps) => {
-  const [inputValues, setInputValues] = useState<ReLoginInputValues>({
+const ModalReSignIn = ({ onClose, onSubmit }: ModalReSignInProps) => {
+  const [inputValues, setInputValues] = useState<ReSignInInputValues>({
     email: "",
     password: "",
   });
@@ -69,7 +69,7 @@ const ModalReLogin = ({ onClose, onSubmit }: ModalReLoginProps) => {
             mix={styles.submit}
             onClick={() => void 0}
           >
-            {"Login"}
+            {"Sign in"}
           </Button>
         </Form>
       </div>
@@ -77,4 +77,4 @@ const ModalReLogin = ({ onClose, onSubmit }: ModalReLoginProps) => {
   );
 };
 
-export default ModalReLogin;
+export default ModalReSignIn;
