@@ -29,6 +29,7 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
     email: "",
     password: "",
   });
+  const [isRequest, setIsRequest] = useState(false);
   const { reSignIn, updEmailWithData, removeUser } = useAuth();
   const { dispatch } = useAppState();
 
@@ -43,6 +44,9 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isRequest) return;
+
+    setIsRequest(true);
     // re sign in with old email and password
     reSignIn(inputValues.email, inputValues.password)
       .then(() => {
@@ -59,7 +63,7 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
 
         // if re-sign-in is needed from the removeUser action
         // then repeat the removeUser action
-        if (data.actionName === "removeUser" && data.data) {
+        if (data.actionName === "removeUser" && data.email) {
           return removeUser().catch((error) => {
             dispatch({
               type: ADD_MODAL_INFO,
@@ -74,7 +78,10 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
           payload: { modalType: "error", info: error },
         });
       })
-      .finally(() => handleClose());
+      .finally(() => {
+        setIsRequest(false);
+        handleClose();
+      });
   };
 
   return (
@@ -92,7 +99,7 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
           <EmailInput
             name="email"
             value={inputValues.email}
-            placeholder={"name@example.com"}
+            placeholder={"Enter email"}
             label={"Email"}
             onChange={handleInputs}
             mix={styles.input}
@@ -100,7 +107,7 @@ const ModalReSignIn = ({ onClose, data }: ModalReSignInProps) => {
           <PasswordInput
             name="password"
             value={inputValues.password}
-            placeholder={"min. 5 characters"}
+            placeholder={"Enter password"}
             label={"Password"}
             onChange={handleInputs}
             mix={styles.input}

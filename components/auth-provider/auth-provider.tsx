@@ -1,7 +1,15 @@
 import { AuthContext, UserInfo } from "@/contexts/auth-context";
 import { handleError } from "@/utils/errors-handler";
 import { auth, database } from "@/utils/init-firebase";
-import { onValue, ref, set, child, get, update } from "firebase/database";
+import {
+  onValue,
+  ref,
+  set,
+  child,
+  get,
+  update,
+  remove,
+} from "firebase/database";
 import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -13,32 +21,42 @@ import {
   UserCredential,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { initUserDatabase } from "@/data/data";
 import { AccountInputValues } from "../_account-page/account-form/account-form";
+import { FirebaseError } from "firebase/app";
 
 export type AuthProviderProps = {
   children?: ReactNode;
 };
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [isLogin, setIsLogin] = useState(false);
   const [wasFirstAuthCheck, setFirstAuthCheck] = useState(false);
 
   const removeUser = useCallback((): Promise<void> => {
+    if (!auth.currentUser) {
+      return Promise.reject({ message: "User does not exist" });
+    }
+    const userRef = ref(database, "users/" + auth.currentUser.uid);
+
     return deleteUser(auth.currentUser as User)
-      .then(() => setUser(null))
+      .then(() =>
+        // delete user database
+        remove(userRef)
+      )
       .catch((e) => {
         throw handleError(e);
       });
   }, []);
 
   const logOut = useCallback((): Promise<void> => {
-    return signOut(auth)
-      .catch((e) => {
-        throw handleError(e);
-      })
-      .finally(() => setUser(null));
+    return signOut(auth).catch((e) => {
+      throw handleError(e);
+    });
   }, []);
 
   const signUp = useCallback(
@@ -76,8 +94,8 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         .then((res) => {
           const userRef = ref(database);
           // get the user's database for the first time
-          return get(child(userRef, `users/${res.user.uid}`))
-            .then((snapshot) => {
+          return get(child(userRef, `users/${res.user.uid}`)).then(
+            (snapshot) => {
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 setUser({
@@ -89,16 +107,26 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
                 setUser(null);
                 throw { name: "Error", message: "Sorry, something went wrong" };
               }
-            })
-            .catch((e) => {
-              throw e;
-            });
+            }
+          );
         })
         .catch((e) => {
           throw handleError(e, "signIn");
         });
     },
     []
+  );
+
+  const signInBrowserSession = useCallback(
+    (email: string, password: string): Promise<UserCredential | void> => {
+      return setPersistence(auth, browserSessionPersistence)
+        .then(() => signIn(email, password))
+        .catch((e) => {
+          if (e instanceof FirebaseError) throw handleError(e);
+          throw e;
+        });
+    },
+    [signIn]
   );
 
   const resetPassword = useCallback((email: string): Promise<void> => {
@@ -126,9 +154,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         .then(() => {
           // Update the data only after the email is updated, as you may
           // need to log in again to update the email
-          return updData(data).catch((e) => {
-            throw handleError(e);
-          });
+          return updData(data);
         })
         .catch((e) => {
           throw handleError(e);
@@ -155,32 +181,51 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   useEffect(() => {
     //function that firebase notifies you if a user is set
     const unsubsrcibe = auth.onAuthStateChanged((userData: User | null) => {
-      setFirstAuthCheck(true);
+      setIsLogin(!!auth.currentUser);
+      if (!wasFirstAuthCheck) {
+        if (!auth.currentUser) setFirstAuthCheck(true);
+        // if(auth.currentUser) - we should invoke the setFirstAuthCheck
+        // after getting user data from the database
+        // (see the next useEffect with onValue(...))
+      }
     });
     return () => unsubsrcibe();
-  }, []);
+  }, [wasFirstAuthCheck]);
 
   useEffect(() => {
-    if (!wasFirstAuthCheck || !auth.currentUser) {
-      return setUser(null);
-    }
-    //function that firebase reacts for database changes
+    if (!isLogin || !auth.currentUser) return;
+
     const userRef = ref(database, "users/" + auth.currentUser.uid);
+
+    //the function that reacts to database changes
     const unsubsrcibe = onValue(userRef, (snapshot) => {
+      if (!auth.currentUser) return;
+
       const data = snapshot.val();
       const newData = data
         ? { ...data, email: auth.currentUser?.email ?? data.email }
         : data;
+
       setUser(newData);
+
+      if (!wasFirstAuthCheck) {
+        setFirstAuthCheck(true);
+      }
     });
     return () => unsubsrcibe();
-  }, [wasFirstAuthCheck]);
+  }, [isLogin, wasFirstAuthCheck]);
+
+  useEffect(() => {
+    if (!wasFirstAuthCheck) return;
+    if (!isLogin) setUser(null);
+  }, [isLogin, wasFirstAuthCheck]);
 
   const values = {
     auth,
     wasFirstAuthCheck,
     user,
     signIn,
+    signInBrowserSession,
     signUp,
     resetPassword,
     updData,

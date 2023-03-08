@@ -1,16 +1,27 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styles from "./auth-layout.module.scss";
 import MealCard from "../../_common/meal-card/meal-card";
 import MealCardSecond from "../../_common/meal-card-second/meal-card-second";
 import ReviewCard from "../../_common/review-card/review-card";
 import classNames from "classnames/bind";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/router";
 
 let cx = classNames.bind(styles);
 
 type AuthLayoutProps = { children: ReactNode };
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
-  // if (user?.isLoggedIn === true || !user) return null;
+  const { user, wasFirstAuthCheck } = useAuth();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (wasFirstAuthCheck && user) {
+      push("/");
+    }
+  }, [wasFirstAuthCheck, user]);
+
+  if (!wasFirstAuthCheck || user) return null;
 
   return (
     <main className={styles.main}>

@@ -62,7 +62,7 @@ const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
       <PasswordInput
         name="password"
         value={inputValues.password}
-        placeholder={"min. 5 characters"}
+        placeholder={"min. 6 characters"}
         label={"Password"}
         onChange={handleInputs}
         mix={cnInput}

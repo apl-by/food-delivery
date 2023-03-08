@@ -5,26 +5,36 @@ import LoginForm, {
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
 import Link from "next/link";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import styles from "../styles/login.module.scss";
 import { useAuth } from "@/hooks/use-auth";
 import { useAppState } from "@/hooks/use-app-state";
 import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const [isRequest, setIsRequest] = useState(false);
+  const { signIn, signInBrowserSession } = useAuth();
   const { dispatch } = useAppState();
 
   const handleLoginSubmit = async (formData: LoginInputValues) => {
-    const { email, password } = formData;
+    if (isRequest) return;
+    const { email, password, checkbox } = formData;
 
     try {
-      await signIn(email, password);
+      setIsRequest(true);
+      if (checkbox) {
+        await signIn(email, password);
+      }
+      if (!checkbox) {
+        await signInBrowserSession(email, password);
+      }
     } catch (error: any) {
       dispatch({
         type: ADD_MODAL_INFO,
-        payload: { type: "error", info: error },
+        payload: { modalType: "error", info: error },
       });
+    } finally {
+      setIsRequest(false);
     }
   };
 

@@ -1,5 +1,4 @@
 :root {
-  --DELETE: #e5e5e5;
   --max-width-content: 1110px;
   --side-padding: 25px;
   --header-height: 80px;
@@ -46,7 +45,7 @@
 }
 
 body {
-  background: var(--DELETE);
+  background: var(--bg-color-primary);
   width: 100%;
   overflow-x: hidden;
   color: var(--text-color-primary-default);

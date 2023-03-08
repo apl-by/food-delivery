@@ -4,7 +4,7 @@ import RegisterForm, {
 } from "@/components/_common/register-form/register-form";
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import styles from "../styles/register.module.scss";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
@@ -12,19 +12,26 @@ import { useAppState } from "@/hooks/use-app-state";
 import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Register = () => {
+  const [isRequest, setIsRequest] = useState(false);
+
   const { signUp } = useAuth();
   const { dispatch } = useAppState();
 
   const handleRegisterSubmit = async (formData: RegisterInputValues) => {
+    if (isRequest) return;
+
     const { email, password } = formData;
 
     try {
+      setIsRequest(true);
       await signUp(email, password);
     } catch (error: any) {
       dispatch({
         type: ADD_MODAL_INFO,
-        payload: { type: "error", info: error },
+        payload: { modalType: "error", info: error },
       });
+    } finally {
+      setIsRequest(false);
     }
   };
 

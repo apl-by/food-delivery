@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/_layouts/auth-layout/auth-layout";
 import Logo from "@/components/_common/logo/logo";
 import Head from "next/head";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import styles from "../styles/recover.module.scss";
 import Link from "next/link";
 import RecoverForm, {
@@ -12,18 +12,23 @@ import { useAppState } from "@/hooks/use-app-state";
 import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 const Recover = () => {
+  const [isRequest, setIsRequest] = useState(false);
+
   const { resetPassword } = useAuth();
   const { dispatch } = useAppState();
 
   const handleRecoverSubmit = async (formData: RecoverInputValues) => {
+    if (isRequest) return;
+
     const { email } = formData;
 
     try {
+      setIsRequest(true);
       await resetPassword(email);
       dispatch({
         type: ADD_MODAL_INFO,
         payload: {
-          type: "notification",
+          modalType: "notification",
           info: {
             message: `The letter was sent to the address "${email}". Go to this email address and set a new password`,
           },
@@ -32,8 +37,10 @@ const Recover = () => {
     } catch (error: any) {
       dispatch({
         type: ADD_MODAL_INFO,
-        payload: { type: "error", info: error },
+        payload: { modalType: "error", info: error },
       });
+    } finally {
+      setIsRequest(false);
     }
   };
 

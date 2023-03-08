@@ -24,6 +24,10 @@ export type AuthContextType = {
   user: UserInfo | null;
   wasFirstAuthCheck: boolean;
   signIn: (email: string, password: string) => Promise<UserCredential | void>;
+  signInBrowserSession: (
+    email: string,
+    password: string
+  ) => Promise<UserCredential | void>;
   signUp: (email: string, password: string) => Promise<UserCredential | void>;
   resetPassword: (email: string) => Promise<void>;
   updData: (data: UserInfo) => Promise<void>;

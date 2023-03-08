@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import type { NextPageWithLayout } from "../_app";
 import styles from "../../styles/account/account.module.scss";
 import classNames from "classnames/bind";
@@ -15,6 +15,8 @@ import { ADD_MODAL_INFO } from "@/services/actions/actions";
 let cx = classNames.bind(styles);
 
 const Account: NextPageWithLayout = () => {
+  const [isRequest, setIsRequest] = useState(false);
+
   const { user, updData, updEmailWithData, logOut } = useAuth();
   const { dispatch } = useAppState();
 
@@ -22,41 +24,51 @@ const Account: NextPageWithLayout = () => {
     formData: AccountInputValues,
     keys: ChangedKeys
   ) => {
-    if (keys.length === 0) return;
+    if (isRequest || keys.length === 0) return;
     if (!keys.includes("email")) {
-      return updData(formData).catch((error) =>
-        dispatch({
-          type: ADD_MODAL_INFO,
-          payload: { modalType: "error", info: error },
-        })
-      );
+      setIsRequest(true);
+      return updData(formData)
+        .catch((error) =>
+          dispatch({
+            type: ADD_MODAL_INFO,
+            payload: { modalType: "error", info: error },
+          })
+        )
+        .finally(() => setIsRequest(false));
     }
     if (keys.includes("email")) {
-      updEmailWithData(formData).catch((error) => {
-        if (error.message === "Needs reSignIn") {
-          return dispatch({
+      setIsRequest(true);
+      return updEmailWithData(formData)
+        .catch((error) => {
+          if (error.message === "Needs reSignIn") {
+            return dispatch({
+              type: ADD_MODAL_INFO,
+              payload: {
+                modalType: "reSignIn",
+                forInvoke: { actionName: "updEmailWithData", data: formData },
+              },
+            });
+          }
+          dispatch({
             type: ADD_MODAL_INFO,
-            payload: {
-              modalType: "reSignIn",
-              forInvoke: { actionName: "updEmailWithData", data: formData },
-            },
+            payload: { modalType: "error", info: error },
           });
-        }
-        dispatch({
-          type: ADD_MODAL_INFO,
-          payload: { modalType: "error", info: error },
-        });
-      });
+        })
+        .finally(() => setIsRequest(false));
     }
   };
 
   const handleSignOut = () => {
-    logOut().catch((error: any) =>
-      dispatch({
-        type: ADD_MODAL_INFO,
-        payload: { modalType: "error", info: error },
-      })
-    );
+    if (isRequest) return;
+    setIsRequest(true);
+    logOut()
+      .catch((error: any) =>
+        dispatch({
+          type: ADD_MODAL_INFO,
+          payload: { modalType: "error", info: error },
+        })
+      )
+      .finally(() => setIsRequest(false));
   };
 
   const handleRemoveUser = (email: string) => {
