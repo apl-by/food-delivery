@@ -1,7 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  margin: auto;
+  margin: 0 auto;
   width: 100%;
   padding: 0 var(--side-padding);
   max-width: calc(var(--max-width-content) + 2 * var(--side-padding));

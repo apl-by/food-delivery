@@ -10,6 +10,7 @@ import { modalPortalId } from "@/data/settings";
 import ModalReSignIn from "@/components/_common/modal-re-sign-in/modal-re-sign-in";
 import { initialState, reducer } from "@/services/reducer/reducer";
 import ModalAlert from "@/components/_common/modal-alert/modal-alert";
+import ModalRemove from "@/components/_common/modal-remove/modal-remove";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -29,17 +30,25 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const modalJsx = useMemo(() => {
     if (state.modalQueue.length === 0) return null;
     const data = state.modalQueue[0];
-    const type = data.type;
+    const modalType = data.modalType;
 
-    if (type === "error" || type === "notification") {
-      const title = type === "error" ? "Error" : "Notification";
+    if (modalType === "error" || modalType === "notification") {
+      const title = modalType === "error" ? "Error" : "Notification";
       return (
-        <ModalAlert title={title} message={data.info.message} type={type} />
+        <ModalAlert
+          title={title}
+          message={data.info.message}
+          type={modalType}
+        />
       );
     }
 
-    //  if (type === "reSignIn") {
-    //  }
+    if (modalType === "reSignIn" && data.forInvoke) {
+      return <ModalReSignIn data={data.forInvoke} />;
+    }
+    if (modalType === "remove" && data.forInvoke) {
+      return <ModalRemove data={data.forInvoke} />;
+    }
     return null;
   }, [state.modalQueue]);
 

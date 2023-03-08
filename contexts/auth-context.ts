@@ -1,18 +1,22 @@
+import { AccountInputValues } from "@/components/_account-page/account-form/account-form";
 import { Auth, UserCredential } from "firebase/auth";
 import React from "react";
 
+export type SubscriptionsKey =
+  | "deals"
+  | "restaurants"
+  | "orderStatuses"
+  | "passwordChanges"
+  | "specialOffers"
+  | "newsletter";
+
 export type UserInfo = {
-  readonly uid: string;
   readonly firstName: string;
   readonly secondName: string;
   readonly email: string;
   readonly phoneNumber: string;
   readonly photoURL: string;
-};
-
-export type UpdNameData = {
-  displayName?: string | undefined;
-  photoURL?: string | undefined;
+  readonly subscriptions: { [key in SubscriptionsKey]: boolean };
 };
 
 export type AuthContextType = {
@@ -22,8 +26,11 @@ export type AuthContextType = {
   signIn: (email: string, password: string) => Promise<UserCredential | void>;
   signUp: (email: string, password: string) => Promise<UserCredential | void>;
   resetPassword: (email: string) => Promise<void>;
-  updName: (data: UpdNameData) => Promise<void>;
-  updEmail: (email: string) => Promise<void>;
+  updData: (data: UserInfo) => Promise<void>;
+  reSignIn: (email: string, password: string) => Promise<void | UserCredential>;
+  logOut: () => Promise<void>;
+  removeUser: () => Promise<void>;
+  updEmailWithData: (data: AccountInputValues) => Promise<void>;
 };
 
 export const AuthContext = React.createContext<AuthContextType>(

@@ -1,3 +1,4 @@
+import { AccountInputValues } from "@/components/_account-page/account-form/account-form";
 import { ADD_MODAL_INFO, DELETE_MODAL_INFO } from "./actions/actions";
 
 // reducer
@@ -16,10 +17,14 @@ export type OrderType = {
 
 export type ModalAlertTypes = "error" | "notification";
 export type ModalPromptTypes = "reSignIn" | "remove";
-export type ModalPromptFrom = "updEmail" | "remove";
+export type ModalPromptForInvoke = {
+  actionName: "updEmailWithData" | "removeUser";
+  data?: AccountInputValues;
+  email?: string;
+};
 
 export type ModalAlert<T extends ModalAlertTypes> = {
-  type: T;
+  modalType: T;
   info:
     | {
         name?: string;
@@ -29,8 +34,8 @@ export type ModalAlert<T extends ModalAlertTypes> = {
 };
 
 export type ModalPrompt<T extends ModalPromptTypes> = {
-  type: T;
-  from: ModalPromptFrom;
+  modalType: T;
+  forInvoke?: ModalPromptForInvoke;
 };
 
 export type Modal = ModalAlert<ModalAlertTypes> | ModalPrompt<ModalPromptTypes>;

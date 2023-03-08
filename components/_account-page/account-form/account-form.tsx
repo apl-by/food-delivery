@@ -9,24 +9,33 @@ import Checkbox from "@/components/_common/checkbox/checkbox";
 import classNames from "classnames/bind";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { UserInfo } from "@/contexts/auth-context";
-import { initCheckboxes } from "@/data/data";
+import { accountCheckboxes } from "@/data/data";
 
 let cx = classNames.bind(styles);
 
 type AccountFormProps = {
   user: UserInfo;
+  onSignOut: () => void;
+  onRemoveUser: (email: string) => void;
   onSubmit: (formData: AccountInputValues, changedKeys: ChangedKeys) => void;
   mix?: string;
 };
 
 export type AccountInputValues = {
-  -readonly [key in keyof Omit<UserInfo, "uid" | "photoURL">]: UserInfo[key];
-} & { checkbox: Map<string, boolean> };
+  -readonly [key in keyof Omit<UserInfo, "uid">]: UserInfo[key];
+};
 
 export type ChangedKeys = Partial<keyof AccountInputValues>[];
 
-const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
-  const { firstName, secondName, email, phoneNumber, photoURL } = user;
+const AccountForm = ({
+  mix,
+  onSubmit,
+  onSignOut,
+  onRemoveUser,
+  user,
+}: AccountFormProps) => {
+  const { firstName, secondName, email, phoneNumber, photoURL, subscriptions } =
+    user;
 
   const formRef = useRef<HTMLFormElement>(null);
   const [isReadOnly, setReadOnly] = useState(true);
@@ -35,16 +44,31 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
     secondName,
     email,
     phoneNumber,
-    checkbox: new Map(initCheckboxes),
+    subscriptions,
+    photoURL,
   });
+
   const [changedKeys, setChangedKeys] = useState<ChangedKeys>([]);
 
+  // find changed keys and add them to the changedKeys array
   useEffect(() => {
     if (isReadOnly) return;
     const keysArr: ChangedKeys = [];
 
     for (let key in inputValues) {
-      if (key === "checkbox") continue;
+      if (key === "subscriptions") {
+        const subscr = inputValues.subscriptions;
+        for (let subscrKey in subscr) {
+          if (
+            subscr[subscrKey as keyof AccountInputValues["subscriptions"]] !==
+            user.subscriptions[subscrKey as keyof UserInfo["subscriptions"]]
+          ) {
+            keysArr.push(key as keyof AccountInputValues);
+            break;
+          }
+        }
+        continue;
+      }
       if (
         inputValues[key as keyof AccountInputValues] !==
         user[key as keyof UserInfo]
@@ -67,7 +91,7 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
       if (type === "checkbox") {
         return {
           ...prev,
-          checkbox: prev.checkbox.set(name, checked),
+          subscriptions: { ...prev.subscriptions, [name]: checked },
         };
       }
 
@@ -95,7 +119,8 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
       secondName,
       email,
       phoneNumber,
-      checkbox: new Map(initCheckboxes),
+      subscriptions,
+      photoURL,
     });
     setReadOnly(true);
     setChangedKeys([]);
@@ -111,7 +136,7 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
         <div className={styles["upper-container"]}>
           <div className={styles["avatar-container"]}>
             <Image
-              src={photoURL !== "" ? photoURL : "/user-avatar.png"}
+              src={photoURL}
               alt={"avatar"}
               width={88}
               height={88}
@@ -125,7 +150,7 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
           >
             {"Change"}
           </Button>
-          <Button onClick={() => void 0} variant="warning">
+          <Button onClick={() => onRemoveUser(user.email)} variant="warning">
             {"Remove"}
           </Button>
         </div>
@@ -169,46 +194,24 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
           {"Email notifications"}
         </h3>
         <fieldset className={styles["checkboxes"]}>
-          <Checkbox
-            name="deals"
-            label="New deals"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("deals") as boolean}
-          />
-          <Checkbox
-            name="restaurants"
-            label="New restaurants"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("restaurants") as boolean}
-          />
-          <Checkbox
-            name="orderStatuses"
-            label="Order statuses"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("orderStatuses") as boolean}
-          />
-          <Checkbox
-            name="passwordChanges"
-            label="Password changes"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("passwordChanges") as boolean}
-          />
-          <Checkbox
-            name="specialOffers"
-            label="Special offers"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("specialOffers") as boolean}
-          />
-          <Checkbox
-            name="newsletter"
-            label="Newsletters"
-            onChange={handleInputs}
-            checked={inputValues.checkbox.get("newsletter") as boolean}
-          />
+          {accountCheckboxes.map((i) => (
+            <Checkbox
+              key={i.id}
+              name={i.name}
+              label={i.label}
+              onChange={handleInputs}
+              checked={
+                isReadOnly
+                  ? subscriptions[i.name]
+                  : inputValues.subscriptions[i.name]
+              }
+              disabled={isReadOnly}
+            />
+          ))}
         </fieldset>
         {/* button-logout-mobile has "display: none" above (max-width: 1000px) */}
         <Button
-          onClick={() => void 0}
+          onClick={onSignOut}
           variant={"warning"}
           mix={styles["button-logout-mobile"]}
         >
@@ -218,7 +221,7 @@ const AccountForm = ({ mix, onSubmit, user }: AccountFormProps) => {
           <div className={styles["divider"]}></div>
           {/* button-logout has "display: none" under (max-width: 1000px) */}
           <Button
-            onClick={() => void 0}
+            onClick={onSignOut}
             variant={"warning"}
             mix={styles["button-logout"]}
           >

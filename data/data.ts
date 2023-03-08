@@ -1,3 +1,5 @@
+import { SubscriptionsKey } from "@/contexts/auth-context";
+
 export type NavItem = {
   id: number;
   title: string;
@@ -68,7 +70,7 @@ export const restaurants: RestaurantData[] = [
     title: "Ninja sushi",
     deliveryTime: "20-40",
     minSum: "40",
-    menu: ["Sushi", "Vegan", "Desserts"],
+    menu: ["Sushi", "Vegan"],
     featured: false,
   },
   {
@@ -82,11 +84,11 @@ export const restaurants: RestaurantData[] = [
   },
   {
     id: 4,
-    img: "/resraurants/japanese-sushi.png",
-    title: "Japanese sushi",
-    deliveryTime: "30-50",
-    minSum: "104",
-    menu: ["Sushi"],
+    img: "/resraurants/house-of-java.png",
+    title: "House of Java",
+    deliveryTime: "30-40",
+    minSum: "55",
+    menu: ["Pizza", "BBQ", "Desserts"],
     featured: false,
   },
   {
@@ -96,6 +98,33 @@ export const restaurants: RestaurantData[] = [
     deliveryTime: "20-30",
     minSum: "57",
     menu: ["Sushi", "Pizza", "Desserts"],
+    featured: false,
+  },
+  {
+    id: 6,
+    img: "/resraurants/cream-n-sugar.png",
+    title: "Cream n` Sugar",
+    deliveryTime: "25-30",
+    minSum: "30",
+    menu: ["Desserts", "Vegan"],
+    featured: false,
+  },
+  {
+    id: 7,
+    img: "/resraurants/lunch-basket.png",
+    title: "Lunch Basket",
+    deliveryTime: "20-40",
+    minSum: "27",
+    menu: ["Burger", "Pizza", "BBQ"],
+    featured: false,
+  },
+  {
+    id: 8,
+    img: "/resraurants/japanese-sushi.png",
+    title: "Japanese sushi",
+    deliveryTime: "30-50",
+    minSum: "104",
+    menu: ["Sushi"],
     featured: false,
   },
 ];
@@ -135,11 +164,34 @@ export const settings = [
   },
 ];
 
-export const initCheckboxes: [string, boolean][] = [
-  ["deals", false],
-  ["restaurants", false],
-  ["orderStatuses", false],
-  ["passwordChanges", false],
-  ["specialOffers", false],
-  ["newsletter", false],
+export const initSubscriptions: { [key in SubscriptionsKey]: boolean } = {
+  deals: false,
+  restaurants: false,
+  orderStatuses: false,
+  passwordChanges: false,
+  specialOffers: false,
+  newsletter: false,
+};
+
+export const initUserDatabase = {
+  firstName: "",
+  secondName: "",
+  email: "",
+  phoneNumber: "",
+  photoURL: "/user-avatar.png",
+  subscriptions: { ...initSubscriptions },
+};
+
+type AccountCheckbox = {
+  id: number;
+  name: SubscriptionsKey;
+  label: string;
+};
+export const accountCheckboxes: AccountCheckbox[] = [
+  { id: 0, name: "deals", label: "New deals" },
+  { id: 1, name: "restaurants", label: "New restaurants" },
+  { id: 2, name: "orderStatuses", label: "Order statuses" },
+  { id: 3, name: "passwordChanges", label: "Password changes" },
+  { id: 4, name: "specialOffers", label: "Special offers" },
+  { id: 5, name: "newsletter", label: "Newsletters" },
 ];

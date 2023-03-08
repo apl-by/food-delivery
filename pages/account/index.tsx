@@ -9,30 +9,64 @@ import AccountForm, {
 } from "@/components/_account-page/account-form/account-form";
 import AccountLayout from "@/components/_layouts/account-layout/account-layout";
 import { useAuth } from "@/hooks/use-auth";
-import { splitter } from "@/data/settings";
+import { useAppState } from "@/hooks/use-app-state";
+import { ADD_MODAL_INFO } from "@/services/actions/actions";
 
 let cx = classNames.bind(styles);
 
 const Account: NextPageWithLayout = () => {
-  const { user, updName, updEmail } = useAuth();
+  const { user, updData, updEmailWithData, logOut } = useAuth();
+  const { dispatch } = useAppState();
 
   const handleAccountSubmit = async (
     formData: AccountInputValues,
     keys: ChangedKeys
   ) => {
-    const { firstName, secondName, email, phoneNumber, checkbox } = formData;
     if (keys.length === 0) return;
-    if (keys.includes("firstName") || keys.includes("secondName")) {
-      const displayName = firstName + splitter + secondName;
-      updName({ displayName }).catch((e) => console.log(e));
-    }
-    if (keys.includes("email")) {
-      updEmail(email).catch((e) =>
-        console.log(e.code, "&&&", e.name, "&&&", e.message)
+    if (!keys.includes("email")) {
+      return updData(formData).catch((error) =>
+        dispatch({
+          type: ADD_MODAL_INFO,
+          payload: { modalType: "error", info: error },
+        })
       );
     }
-    if (keys.includes("phoneNumber") || keys.includes("checkbox")) {
+    if (keys.includes("email")) {
+      updEmailWithData(formData).catch((error) => {
+        if (error.message === "Needs reSignIn") {
+          return dispatch({
+            type: ADD_MODAL_INFO,
+            payload: {
+              modalType: "reSignIn",
+              forInvoke: { actionName: "updEmailWithData", data: formData },
+            },
+          });
+        }
+        dispatch({
+          type: ADD_MODAL_INFO,
+          payload: { modalType: "error", info: error },
+        });
+      });
     }
+  };
+
+  const handleSignOut = () => {
+    logOut().catch((error: any) =>
+      dispatch({
+        type: ADD_MODAL_INFO,
+        payload: { modalType: "error", info: error },
+      })
+    );
+  };
+
+  const handleRemoveUser = (email: string) => {
+    dispatch({
+      type: ADD_MODAL_INFO,
+      payload: {
+        modalType: "remove",
+        forInvoke: { actionName: "removeUser", email },
+      },
+    });
   };
 
   if (!user) return null;
@@ -45,7 +79,12 @@ const Account: NextPageWithLayout = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AccountForm onSubmit={handleAccountSubmit} user={user} />
+      <AccountForm
+        onSubmit={handleAccountSubmit}
+        onSignOut={handleSignOut}
+        onRemoveUser={handleRemoveUser}
+        user={user}
+      />
     </>
   );
 };

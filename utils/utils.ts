@@ -72,32 +72,3 @@ export const getData = (
 
   return data;
 };
-
-const _getName = (
-  data: string | null,
-  splitter: string
-): { firstName: string; secondName: string } => {
-  const result = { firstName: "", secondName: "" };
-  if (!data) return result;
-
-  const splitted = data.split(splitter);
-  result.firstName = splitted[0] ?? "";
-  result.secondName = splitted[1] ?? "";
-
-  return result;
-};
-
-export const handleUserInfo = (data: User | null) => {
-  if (!data) return null;
-
-  const { firstName, secondName } = _getName(data.displayName, splitter);
-  const { uid, email, phoneNumber, photoURL } = data;
-  return {
-    uid,
-    firstName,
-    secondName,
-    email: email ?? "",
-    phoneNumber: phoneNumber ?? "",
-    photoURL: photoURL ?? "",
-  };
-};

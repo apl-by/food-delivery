@@ -72,7 +72,7 @@ export const handleError = (error: Error, from?: ErrorFrom) => {
     if (code === "auth/requires-recent-login") {
       return {
         name,
-        message: "needs reSignIn",
+        message: "Needs reSignIn",
       };
     }
 

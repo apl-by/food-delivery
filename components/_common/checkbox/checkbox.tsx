@@ -10,9 +10,17 @@ type CheckboxProps = {
   label: string;
   mix?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 };
 
-const Checkbox = ({ checked, name, label, mix, onChange }: CheckboxProps) => {
+const Checkbox = ({
+  checked,
+  name,
+  label,
+  mix,
+  onChange,
+  disabled,
+}: CheckboxProps) => {
   const id = useId();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +39,7 @@ const Checkbox = ({ checked, name, label, mix, onChange }: CheckboxProps) => {
         name={name}
         onChange={handleChange}
         className={styles.input}
+        disabled={disabled}
       />
     </label>
   );

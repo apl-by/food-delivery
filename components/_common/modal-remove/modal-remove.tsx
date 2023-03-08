@@ -6,27 +6,52 @@ import Button from "../button/button";
 import { useState } from "react";
 import Form from "../form/form";
 import TextInput from "../text-input/text-input";
+import { useAppState } from "@/hooks/use-app-state";
+import { ADD_MODAL_INFO, DELETE_MODAL_INFO } from "@/services/actions/actions";
+import { ModalPromptForInvoke } from "@/services/types";
+import { useAuth } from "@/hooks/use-auth";
 
 let cx = classNames.bind(styles);
 
 type ModalRemoveProps = {
-  onClose: () => void;
-  onSubmit: (formData: RemoveInputValues) => void;
+  data: ModalPromptForInvoke;
+  onClose?: () => void;
 };
 
 export type RemoveInputValues = {
   email: string;
 };
 
-const ModalRemove = ({ onClose, onSubmit }: ModalRemoveProps) => {
+const ModalRemove = ({ onClose, data }: ModalRemoveProps) => {
   const [inputValues, setInputValues] = useState<RemoveInputValues>({
     email: "",
   });
+  const { removeUser } = useAuth();
+  const { dispatch } = useAppState();
+
+  const handleClose = () => {
+    onClose?.() ? void 0 : dispatch({ type: DELETE_MODAL_INFO });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(inputValues);
-    onClose();
+    if (data.actionName === "removeUser" && data.email) {
+      if (data.email !== inputValues.email) return;
+      return removeUser()
+        .catch((error) => {
+          if (error.message === "Needs reSignIn") {
+            return dispatch({
+              type: ADD_MODAL_INFO,
+              payload: { modalType: "reSignIn", forInvoke: data },
+            });
+          }
+          return dispatch({
+            type: ADD_MODAL_INFO,
+            payload: { modalType: "error", info: error },
+          });
+        })
+        .finally(() => handleClose());
+    }
   };
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,17 +59,18 @@ const ModalRemove = ({ onClose, onSubmit }: ModalRemoveProps) => {
     setInputValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const a = "asdfdfasdf";
   return (
-    <ModalOverlay onClick={(e) => e.target !== e.currentTarget || onClose()}>
+    <ModalOverlay
+      onClick={(e) => e.target !== e.currentTarget || handleClose()}
+    >
       <div className={styles.modal}>
-        <div className={styles["close-btn"]} onClick={onClose}>
+        <div className={styles["close-btn"]} onClick={handleClose}>
           <CloseIcon />
         </div>
         <h2 className={styles.title}>{"Confirm account removing"}</h2>
         <p className={styles.text}>
           {`This action cannot be undone. This will permanently delete your account. If you are absolutely sure, please type `}
-          <span className={styles["text-span"]}>{a}</span>
+          <span className={styles["text-span"]}>{data.email}</span>
           {` to confirm`}
         </p>
         <Form className={styles.form} onSubmit={handleSubmit}>
@@ -52,7 +78,7 @@ const ModalRemove = ({ onClose, onSubmit }: ModalRemoveProps) => {
             name="email"
             value={inputValues.email}
             onChange={handleInputs}
-            pattern={a}
+            pattern={data.email}
             mix={styles.input}
           />
           <Button
