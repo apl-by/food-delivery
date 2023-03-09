@@ -7,6 +7,8 @@ import Form from "../form/form";
 import PasswordInput from "../password-input/password-input";
 import styles from "./login-form.module.scss";
 import classNames from "classnames/bind";
+import { useAppState } from "@/hooks/use-app-state";
+import { SET_EXAMPLE_MOD } from "@/services/actions/actions";
 
 let cx = classNames.bind(styles);
 
@@ -27,6 +29,7 @@ const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
     password: "",
     checkbox: false,
   });
+  const { state, dispatch } = useAppState();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,6 +40,13 @@ const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
     const { name, value, checked, type } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
     setInputValues((prev) => ({ ...prev, [name]: inputValue }));
+  };
+
+  const setExamleMod = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    dispatch({
+      type: SET_EXAMPLE_MOD,
+    });
   };
 
   const cnLoginForm = cx("form", mix);
@@ -90,7 +100,7 @@ const LoginForm = ({ mix, onSubmit }: LoginFormProps) => {
           {" Sign up"}
         </Link>
       </p>
-      <Link href={"/"} className={styles.link}>
+      <Link href={"/"} className={styles.link} onClick={setExamleMod}>
         {"I want to log in without authentication"}
       </Link>
     </Form>

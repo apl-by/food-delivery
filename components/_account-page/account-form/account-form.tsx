@@ -113,6 +113,14 @@ const AccountForm = ({
     }
   };
 
+  const handleRemoveBtn = (e: SyntheticEvent) => {
+    onRemoveUser(user.email);
+  };
+
+  const handleSignOut = (e: SyntheticEvent) => {
+    onSignOut();
+  };
+
   const handleDiscardBtn = (e: SyntheticEvent) => {
     setInputValues({
       firstName,
@@ -150,7 +158,7 @@ const AccountForm = ({
           >
             {"Change"}
           </Button>
-          <Button onClick={() => onRemoveUser(user.email)} variant="warning">
+          <Button onClick={handleRemoveBtn} variant="warning">
             {"Remove"}
           </Button>
         </div>
@@ -211,7 +219,7 @@ const AccountForm = ({
         </fieldset>
         {/* button-logout-mobile has "display: none" above (max-width: 1000px) */}
         <Button
-          onClick={onSignOut}
+          onClick={handleSignOut}
           variant={"warning"}
           mix={styles["button-logout-mobile"]}
         >
@@ -221,7 +229,7 @@ const AccountForm = ({
           <div className={styles["divider"]}></div>
           {/* button-logout has "display: none" under (max-width: 1000px) */}
           <Button
-            onClick={onSignOut}
+            onClick={handleSignOut}
             variant={"warning"}
             mix={styles["button-logout"]}
           >

@@ -1,4 +1,9 @@
-import { ADD_MODAL_INFO, DELETE_MODAL_INFO } from "../actions/actions";
+import {
+  ADD_MODAL_INFO,
+  DELETE_EXAMPLE_MOD,
+  DELETE_MODAL_INFO,
+  SET_EXAMPLE_MOD,
+} from "../actions/actions";
 import { Actions, OrderType, State } from "../types";
 
 // example of the fake order
@@ -29,6 +34,7 @@ const fakeOrder: OrderType = {
 export const initialState: State = {
   order: fakeOrder,
   modalQueue: [],
+  exampleMod: false,
 };
 
 export const reducer = (state: State, action: Actions): State => {
@@ -38,6 +44,10 @@ export const reducer = (state: State, action: Actions): State => {
     case DELETE_MODAL_INFO:
       const newArr = state.modalQueue.slice(1);
       return { ...state, modalQueue: [...newArr] };
+    case SET_EXAMPLE_MOD:
+      return { ...state, exampleMod: true };
+    case DELETE_EXAMPLE_MOD:
+      return { ...state, exampleMod: false };
     default:
       throw new Error(`Unknow action type: ${(action as any).type}`);
   }

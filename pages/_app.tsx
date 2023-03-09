@@ -24,6 +24,7 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const store = useMemo(() => ({ state, dispatch }), [state]);
 
   const getLayout = Component.getLayout || ((page) => page);
 
@@ -53,7 +54,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   }, [state.modalQueue]);
 
   return (
-    <StateContext.Provider value={{ state, dispatch }}>
+    <StateContext.Provider value={store}>
       <AuthProvider>
         {getLayout(
           <>

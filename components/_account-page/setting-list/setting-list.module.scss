@@ -18,7 +18,13 @@
   row-gap: 12px;
 }
 
+.item {
+  display: flex;
+  width: 100%;
+  max-width: 350px;
+}
 .link {
   text-decoration: none;
   color: inherit;
+  width: 100%;
 }

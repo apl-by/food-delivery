@@ -1,4 +1,4 @@
-import { SubscriptionsKey } from "@/contexts/auth-context";
+import { SubscriptionsKey, UserInfo } from "@/contexts/auth-context";
 
 export type NavItem = {
   id: number;
@@ -195,3 +195,19 @@ export const accountCheckboxes: AccountCheckbox[] = [
   { id: 4, name: "specialOffers", label: "Special offers" },
   { id: 5, name: "newsletter", label: "Newsletters" },
 ];
+
+export const exampleModUser: UserInfo = {
+  firstName: "Jane",
+  secondName: "Robertson",
+  email: "jane.robertson@example.com",
+  phoneNumber: "+7 452 145 52 14",
+  photoURL: "/example-avatar.png",
+  subscriptions: {
+    deals: false,
+    restaurants: true,
+    orderStatuses: true,
+    passwordChanges: false,
+    specialOffers: false,
+    newsletter: true,
+  },
+};

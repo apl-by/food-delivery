@@ -1,8 +1,6 @@
 import Head from "next/head";
 import { ReactElement, useState } from "react";
 import type { NextPageWithLayout } from "../_app";
-import styles from "../../styles/account/account.module.scss";
-import classNames from "classnames/bind";
 import AccountForm, {
   AccountInputValues,
   ChangedKeys,
@@ -10,20 +8,35 @@ import AccountForm, {
 import AccountLayout from "@/components/_layouts/account-layout/account-layout";
 import { useAuth } from "@/hooks/use-auth";
 import { useAppState } from "@/hooks/use-app-state";
-import { ADD_MODAL_INFO } from "@/services/actions/actions";
-
-let cx = classNames.bind(styles);
+import { ADD_MODAL_INFO, DELETE_EXAMPLE_MOD } from "@/services/actions/actions";
+import { exampleModUser } from "@/data/data";
 
 const Account: NextPageWithLayout = () => {
   const [isRequest, setIsRequest] = useState(false);
 
   const { user, updData, updEmailWithData, logOut } = useAuth();
-  const { dispatch } = useAppState();
+  const { state, dispatch } = useAppState();
+  const exampleMod = state.exampleMod;
+
+  const sourceUserData = exampleMod ? exampleModUser : user;
 
   const handleAccountSubmit = async (
     formData: AccountInputValues,
     keys: ChangedKeys
   ) => {
+    if (exampleMod) {
+      return dispatch({
+        type: ADD_MODAL_INFO,
+        payload: {
+          modalType: "notification",
+          info: {
+            message:
+              "You can't save changes in the example mod. You need to sign up and to sign in as a user to change the data",
+          },
+        },
+      });
+    }
+
     if (isRequest || keys.length === 0) return;
     if (!keys.includes("email")) {
       setIsRequest(true);
@@ -59,6 +72,12 @@ const Account: NextPageWithLayout = () => {
   };
 
   const handleSignOut = () => {
+    if (exampleMod) {
+      return dispatch({
+        type: DELETE_EXAMPLE_MOD,
+      });
+    }
+
     if (isRequest) return;
     setIsRequest(true);
     logOut()
@@ -72,6 +91,19 @@ const Account: NextPageWithLayout = () => {
   };
 
   const handleRemoveUser = (email: string) => {
+    if (exampleMod) {
+      return dispatch({
+        type: ADD_MODAL_INFO,
+        payload: {
+          modalType: "notification",
+          info: {
+            message:
+              "You can't remove user in the example mod. You need to sign up and to sign in as a user to change the data",
+          },
+        },
+      });
+    }
+
     dispatch({
       type: ADD_MODAL_INFO,
       payload: {
@@ -81,7 +113,7 @@ const Account: NextPageWithLayout = () => {
     });
   };
 
-  if (!user) return null;
+  if (!sourceUserData) return null;
 
   return (
     <>
@@ -95,7 +127,7 @@ const Account: NextPageWithLayout = () => {
         onSubmit={handleAccountSubmit}
         onSignOut={handleSignOut}
         onRemoveUser={handleRemoveUser}
-        user={user}
+        user={sourceUserData}
       />
     </>
   );

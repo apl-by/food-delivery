@@ -6,6 +6,7 @@ import ReviewCard from "../../_common/review-card/review-card";
 import classNames from "classnames/bind";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/router";
+import { useAppState } from "@/hooks/use-app-state";
 
 let cx = classNames.bind(styles);
 
@@ -14,14 +15,17 @@ type AuthLayoutProps = { children: ReactNode };
 export default function AuthLayout({ children }: AuthLayoutProps) {
   const { user, wasFirstAuthCheck } = useAuth();
   const { push } = useRouter();
+  const { state } = useAppState();
+  const exampleMod = state.exampleMod;
 
   useEffect(() => {
-    if (wasFirstAuthCheck && user) {
+    if (wasFirstAuthCheck && (user || exampleMod)) {
       push("/");
     }
-  }, [wasFirstAuthCheck, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wasFirstAuthCheck, user, exampleMod]);
 
-  if (!wasFirstAuthCheck || user) return null;
+  if (!wasFirstAuthCheck || user || exampleMod) return null;
 
   return (
     <main className={styles.main}>
