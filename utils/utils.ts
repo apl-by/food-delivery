@@ -1,5 +1,3 @@
-import { splitter } from "@/data/settings";
-import { User } from "firebase/auth";
 import { RestaurantData, FoodCategoryTitle } from "../data/data";
 
 export const getQueryParams = (
